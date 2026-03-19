@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmartLife Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">SmartLife</h2>
+
+    <ul>
+      <li class="active">Dashboard</li>
+      <li>Tasks</li>
+      <li>Finance</li>
+      <li>Focus</li>
+    </ul>
+
+    <div class="collapse">Collapse Menu</div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+
+      <input type="text" placeholder="Search tasks, finances, or settings..." />
+
+      <div class="right-section">
+
+        <div class="notification">
+          🔔
+          <span class="dot"></span>
+        </div>
+
+        <div class="profile-box">
+          <div class="profile-text">
+            <h4>John Doe</h4>
+            <p>PREMIUM USER</p>
+          </div>
+          <div class="avatar"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <h1>Daily Overview</h1>
+        <p class="date">Wednesday, March 18, 2026</p>
+      </div>
+      <button class="btn">+ New Entry</button>
+    </div>
+
+    <!-- Cards -->
+    <div class="cards">
+
+      <div class="card">
+        <span class="tag green">+12.5%</span>
+        <p>TASKS DONE</p>
+        <h2>24/30</h2>
+      </div>
+
+      <div class="card">
+        <span class="tag yellow">On Track</span>
+        <p>FOCUS TIME</p>
+        <h2>4.5 hrs</h2>
+      </div>
+
+      <div class="card">
+        <span class="tag red">-$240.00</span>
+        <p>DAILY SPENDING</p>
+        <h2>$1,240.50</h2>
+      </div>
+
+    </div>
+
+    <!-- Bottom -->
+    <div class="bottom">
+
+      <!-- Tasks -->
+      <div class="tasks">
+        <div class="tasks-header">
+          <h3>Recent Tasks</h3>
+          <span>View All</span>
+        </div>
+
+        <div class="task">
+          <input type="checkbox">
+          <div>
+            <p>Finish project proposal</p>
+            <span>HIGH PRIORITY</span>
+          </div>
+        </div>
+
+        <div class="task done">
+          <input type="checkbox" checked>
+          <div>
+            <p>Review weekly budget</p>
+            <span>MEDIUM PRIORITY</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Score -->
+      <div class="score">
+        <h3>Productivity Score</h3>
+        <div class="circle">
+          <span>82%</span>
+          <p>Excellent</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+<script src="script.js"></script>
+
+</body>
+</html>
