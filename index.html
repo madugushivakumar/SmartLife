@@ -124,7 +124,70 @@
   </main>
 
 </div>
-<script src="script.js"></script>
+<!-- Overlay Modal -->
+<div id="overlay" class="overlay hidden">
 
+  <div class="entry-card">
+
+    <!-- Header -->
+    <div class="entry-header">
+      <div>
+        <h2>Create New Entry</h2>
+        <p>What would you like to add today?</p>
+      </div>
+      <span id="closeBtn" class="close">&times;</span>
+    </div>
+
+    <!-- Tabs -->
+    <div class="entry-tabs">
+      <button class="tab active" data-type="task">TASK</button>
+      <button class="tab" data-type="finance">FINANCE</button>
+      <button class="tab" data-type="focus">FOCUS</button>
+    </div>
+
+    <!-- Sections -->
+    <div class="entry-body">
+
+      <!-- TASK -->
+      <div id="task" class="section active">
+        <label>TASK TITLE</label>
+        <input type="text" placeholder="What needs to be done?" />
+
+        <label>PRIORITY</label>
+        <div class="priority">
+          <button>High</button>
+          <button class="active">Medium</button>
+          <button>Low</button>
+        </div>
+      </div>
+
+      <!-- FINANCE -->
+      <div id="finance" class="section">
+        <label>AMOUNT</label>
+        <input type="number" placeholder="Enter amount" />
+
+        <label>CATEGORY</label>
+        <input type="text" placeholder="Food, Rent..." />
+      </div>
+
+      <!-- FOCUS -->
+      <div id="focus" class="section">
+        <label>FOCUS TIME</label>
+        <input type="time" />
+
+        <label>MODE</label>
+        <input type="text" placeholder="Deep work / Study" />
+      </div>
+
+    </div>
+
+    <!-- Button -->
+    <button class="save-btn">SAVE ENTRY</button>
+
+  </div>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
