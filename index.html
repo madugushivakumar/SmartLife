@@ -14,10 +14,10 @@
     <h2 class="logo">SmartLife</h2>
 
     <ul>
-      <li class="active">Dashboard</li>
-      <li>Tasks</li>
-      <li>Finance</li>
-      <li>Focus</li>
+      <li class="active" data-page="dashboard">Dashboard</li>
+      <li data-page="tasks">Tasks</li>
+      <li data-page="finance">Finance</li>
+      <li data-page="focus">Focus</li>
     </ul>
 
     <div class="collapse">Collapse Menu</div>
@@ -154,11 +154,14 @@
         <input type="text" placeholder="What needs to be done?" />
 
         <label>PRIORITY</label>
-        <div class="priority">
-          <button>High</button>
-          <button class="active">Medium</button>
-          <button>Low</button>
-        </div>
+       <div class="priority">
+  <button class="high">High</button>
+  <button class="medium active">Medium</button>
+  <button class="low">Low</button>
+</div>
+
+  <label>DUE DATE</label>
+  <input type="date" id="dueDate">
       </div>
 
       <!-- FINANCE -->
