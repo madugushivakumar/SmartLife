@@ -14,8 +14,8 @@
     <h2 class="logo">SmartLife</h2>
 
     <ul>
-      <li class="active"  data-page="dashboard">Dashboard</li>
-      <li data-page="tasks">Tasks </li>
+      <li class="active" data-page="dashboard">Dashboard</li>
+      <li data-page="tasks">Tasks</li>
       <li data-page="finance">Finance</li>
       <li data-page="focus">Focus</li>
     </ul>
@@ -154,17 +154,14 @@
         <input type="text" placeholder="What needs to be done?" />
 
         <label>PRIORITY</label>
-        <div class="priority">
-          <button class="high">High</button>
-          <button class="medium" >Medium</button>
-          <button class="low">Low</button>
-        </div>
+       <div class="priority">
+  <button class="high">High</button>
+  <button class="medium active">Medium</button>
+  <button class="low">Low</button>
+</div>
 
-        <label>DUE DATE</label>
-        <div class="TaskDueDate">
-<input type="date"></input>
-
-        </div>
+  <label>DUE DATE</label>
+  <input type="date" id="dueDate">
       </div>
 
       <!-- FINANCE -->
@@ -192,14 +189,6 @@
 
   </div>
 
-</div>
-
-<div class="Task Manager">
-<h1>Task Manager</h1>  
-<div class="TaskManagerSection">
-  <input><label> Add a new Task..</label><button>Add</button>
-<div></div>
-</div>
 </div>
 
 <script src="script.js"></script>
