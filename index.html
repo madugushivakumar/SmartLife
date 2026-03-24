@@ -86,29 +86,22 @@
     <div class="bottom">
 
       <!-- Tasks -->
-      <div class="tasks">
-        <div class="tasks-header">
-          <h3>Recent Tasks</h3>
-          <span>View All</span>
-        </div>
+     <div class="tasks">
 
-        <div class="task">
-          <input type="checkbox">
-          <div>
-            <p>Finish project proposal</p>
-            <span>HIGH PRIORITY</span>
-          </div>
-        </div>
+   <div class="tasks-header">
+    <h3>Task Manager</h3>
+    </div>
 
-        <div class="task done">
-          <input type="checkbox" checked>
-          <div>
-            <p>Review weekly budget</p>
-            <span>MEDIUM PRIORITY</span>
-          </div>
-        </div>
+    <!-- ADD TASK INPUT -->
+    <div class="add-task">
+    <input type="text" id="taskInput" placeholder="Add a new task..." />
+    <button id="addBtn">Add</button>
+  </div>
 
-      </div>
+  <!-- TASK LIST -->
+  <div id="taskList"></div>
+
+</div>
 
       <!-- Score -->
       <div class="score">

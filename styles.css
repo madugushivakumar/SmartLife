@@ -409,3 +409,24 @@ body {
   color: gray;
   margin-left: 10px;
 }
+.add-task {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.add-task input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 20px;
+  border: none;
+  background: #eee;
+}
+
+.add-task button {
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: #6c5ce7;
+  color: white;
+  border: none;
+}

@@ -1,41 +1,38 @@
 "use strict";
+
 const AppState = {
   tasks: [],
   finance: [],
   focus: []
 };
+
+// ELEMENTS
 const newEntryBtn = document.querySelector(".btn");
 const overlay = document.getElementById("overlay");
 const closeBtn = document.getElementById("closeBtn");
 const saveBtn = document.querySelector(".save-btn");
 const menuItems = document.querySelectorAll(".sidebar li");
 
-
-// Open modal
+// MODAL
 newEntryBtn.addEventListener("click", () => {
   overlay.classList.remove("hidden");
 });
 
-// Close modal
 closeBtn.addEventListener("click", () => {
   overlay.classList.add("hidden");
 });
 
-// Switch tabs
+// TAB SWITCH
 document.querySelectorAll(".tab").forEach(btn => {
   btn.addEventListener("click", () => {
-
-    // remove active from tabs
     document.querySelector(".tab.active").classList.remove("active");
     btn.classList.add("active");
-
-    // switch section
     document.querySelector(".section.active").classList.remove("active");
     document.getElementById(btn.dataset.type).classList.add("active");
-
   });
 });
 
+// SAVE ENTRY
 saveBtn.addEventListener("click", () => {
   const type = document.querySelector(".tab.active").dataset.type;
   if (type === "task") saveTask();
@@ -43,111 +40,122 @@ saveBtn.addEventListener("click", () => {
   if (type === "focus") saveFocus();
   overlay.classList.add("hidden");
 });
-// ================= SAVE FUNCTIONS =================
+
+// =================SAVE TASK =================
 function saveTask() {
   const title = document.querySelector("#task input").value;
-  const priority = document.querySelector(".priority button").innerText;
-  const duedate= document.querySelector(".TaskDueDate input").value;
-  
+  const priority = document.querySelector(".priority button.active").innerText;
+  const duedate = document.getElementById("dueDate").value;
   if (!title.trim()) return;
+
   AppState.tasks.push({
     title,
-    priority,duedate
+    priority,
+    duedate,
+    completed: false
   });
+
   document.querySelector("#task input").value = "";
+  saveToLocal();
+  showTasks();
 }
-function saveFinance() {
-  const amount = Number(document.querySelector("#finance input[type='number']").value);
-  const category = document.querySelector("#finance input[type='text']").value;
-  if (!amount) return;
-  AppState.finance.push({
-    amount,
-    category
+
+// ================= ADD BUTTON =================
+const addBtn = document.getElementById("addBtn");
+const input = document.getElementById("taskInput");
+addBtn.addEventListener("click", () => {
+  const title = input.value.trim();
+  if (!title) return;
+
+  AppState.tasks.push({
+    title,
+    priority: "Medium",
+    duedate: new Date().toISOString().split("T")[0],
+    completed: false
   });
-  document.querySelector("#finance input[type='number']").value = "";
-  document.querySelector("#finance input[type='text']").value = "";
-}
-function saveFocus() {
-  const time = document.querySelector("#focus input[type='time']").value;
-  const mode = document.querySelector("#focus input[type='text']").value;
-  if (!time) return;
-  AppState.focus.push({
-    time,
-    mode
+
+  input.value = "";
+  saveToLocal();
+  showTasks();
+});
+
+// ================= SHOW TASKS =================
+function showTasks() {
+  const container = document.getElementById("taskList");
+  container.innerHTML = "";
+  AppState.tasks.forEach((task, index) => {
+    let colorClass = task.priority.toLowerCase();
+    container.innerHTML += `
+      <div class="task-card ${task.completed ? "done" : ""}">
+        <input type="checkbox"
+          ${task.completed ? "checked" : ""}
+          onchange="toggleTask(${index})" />
+        <div class="task-content">
+          <p>${task.title}</p>
+          <span class="priority-tag ${colorClass}">
+            ${task.priority}
+          </span>
+          <small>${task.duedate || ""}</small>
+        </div>
+        <div>
+          <button onclick="editTask(${index})">✏</button>
+          <button onclick="deleteTask(${index})">🗑</button>
+        </div>
+      </div>
+    `;
   });
-  document.querySelector("#focus input[type='time']").value = "";
-  document.querySelector("#focus input[type='text']").value = "";
 }
-// ================= SIDEBAR NAVIGATION =================
+
+// ================= ACTIONS =================
+function toggleTask(index) {
+  AppState.tasks[index].completed = !AppState.tasks[index].completed;
+  saveToLocal();
+  showTasks();
+}
+
+function deleteTask(index) {
+  AppState.tasks.splice(index, 1);
+  saveToLocal();
+  showTasks();
+}
+
+function editTask(index) {
+  const newTitle = prompt("Edit task", AppState.tasks[index].title);
+  if (!newTitle) return;
+  AppState.tasks[index].title = newTitle;
+  saveToLocal();
+  showTasks();
+}
+
+// ================= STORAGE =================
+function loadFromLocal() {
+  const data = localStorage.getItem("tasks");
+  if (data) AppState.tasks = JSON.parse(data);
+}
+
+function saveToLocal() {
+  localStorage.setItem("tasks", JSON.stringify(AppState.tasks));
+}
+
+// ================= OTHER =================
+function saveFinance() {}
+function saveFocus() {}
 menuItems.forEach(item => {
   item.addEventListener("click", () => {
-    // active highlight
     document.querySelector(".sidebar li.active").classList.remove("active");
     item.classList.add("active");
-    const page = item.dataset.page;
-    if (page === "dashboard") showDashboard();
-    if (page === "tasks") showTasks();
-    if (page === "finance") showFinance();
-    if (page === "focus") showFocus();
+    if (item.dataset.page === "tasks") showTasks();
   });
 });
-// ================= DISPLAY FUNCTIONS =================
-// 👉 Dashboard Reset
-// function showDashboard() {
-//   location.reload(); // simple reset (for now)
-// }
-// 👉 Show Tasks
-function showTasks() {
-  const container = document.querySelector(".tasks");
-  container.innerHTML = "<h3>All Tasks</h3>";
-  AppState.tasks.forEach(task => {
-    container.innerHTML += `
-      <div class="task">
-        <p>${task.title}</p>
-        <span>${task.priority}</span>
-          <span>${task.duedate}</span>
-        
-      </div>
-    `;
-  });
-}
 
-// 👉 Show Finance
-function showFinance() {
-  const container = document.querySelector(".tasks");
-  container.innerHTML = "<h3>Finance Details</h3>";
-  AppState.finance.forEach(f => {
-    container.innerHTML += `
-      <div>
-        <p>$${f.amount}</p>
-        <span>${f.category}</span>
-      </div>
-    `;
-  });
-}
-// 👉 Show Focus
-function showFocus() {
-  const container = document.querySelector(".tasks");
-  container.innerHTML = "<h3>Focus Sessions</h3>";
-  AppState.focus.forEach(f => {
-    container.innerHTML += `
-      <div>
-        <p>${f.time}</p>
-        <span>${f.mode}</span>
-      </div>
-    `;
-  });
-}
-
-const priorityButtons = document.querySelectorAll(".priority button");
-
-priorityButtons.forEach(btn => {
+// PRIORITY CLICK
+document.querySelectorAll(".priority button").forEach(btn => {
   btn.addEventListener("click", () => {
-    
-    // remove active from all
-    priorityButtons.forEach(b => b.classList.remove("active"));
-    
-    // add active to clicked button
+    document.querySelectorAll(".priority button").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
   });
 });
+
+// INIT
+loadFromLocal();
+showTasks();
