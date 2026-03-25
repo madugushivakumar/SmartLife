@@ -12,7 +12,12 @@ const overlay = document.getElementById("overlay");
 const closeBtn = document.getElementById("closeBtn");
 const saveBtn = document.querySelector(".save-btn");
 const menuItems = document.querySelectorAll(".sidebar li");
+const sortSelect = document.getElementById("sortSelect");
 
+sortSelect.addEventListener("change", () => {
+  sortTasks(sortSelect.value);
+  showTasks();
+});
 // MODAL
 newEntryBtn.addEventListener("click", () => {
   overlay.classList.remove("hidden");
@@ -155,7 +160,20 @@ document.querySelectorAll(".priority button").forEach(btn => {
     btn.classList.add("active");
   });
 });
+function sortTasks(type) {
+  if (type === "date") {
+    AppState.tasks.sort((a, b) => (a.duedate || "").localeCompare(b.duedate || ""));
+  }
 
+  else if (type === "priority") {
+    const order = { High: 1, Medium: 2, Low: 3 };
+    AppState.tasks.sort((a, b) => order[a.priority] - order[b.priority]);
+  }
+
+  else if (type === "status") {
+    AppState.tasks.sort((a, b) => a.completed - b.completed);
+  }
+}
 // INIT
 loadFromLocal();
 showTasks();

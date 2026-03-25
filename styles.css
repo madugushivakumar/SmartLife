@@ -430,3 +430,13 @@ body {
   color: white;
   border: none;
 }
+.sort {
+  margin-bottom: 10px;
+}
+
+.sort select {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  background: #eee;
+}
