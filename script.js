@@ -12,12 +12,7 @@ const overlay = document.getElementById("overlay");
 const closeBtn = document.getElementById("closeBtn");
 const saveBtn = document.querySelector(".save-btn");
 const menuItems = document.querySelectorAll(".sidebar li");
-const sortSelect = document.getElementById("sortSelect");
 
-sortSelect.addEventListener("change", () => {
-  sortTasks(sortSelect.value);
-  showTasks();
-});
 // MODAL
 newEntryBtn.addEventListener("click", () => {
   overlay.classList.remove("hidden");
@@ -69,6 +64,10 @@ function saveTask() {
 const addBtn = document.getElementById("addBtn");
 const input = document.getElementById("taskInput");
 addBtn.addEventListener("click", () => {
+   if (getComputedStyle(input).display === "none") {
+    input.style.display = "block";
+    return input.focus();
+  }
   const title = input.value.trim();
   if (!title) return;
 
@@ -80,6 +79,7 @@ addBtn.addEventListener("click", () => {
   });
 
   input.value = "";
+   input.style.display = "none";
   saveToLocal();
   showTasks();
 });
@@ -145,13 +145,18 @@ function saveToLocal() {
 // ================= OTHER =================
 function saveFinance() {}
 function saveFocus() {}
-menuItems.forEach(item => {
+menuItems.forEach(item =>
   item.addEventListener("click", () => {
-    document.querySelector(".sidebar li.active").classList.remove("active");
+    document.querySelector(".active")?.classList.remove("active");
     item.classList.add("active");
-    if (item.dataset.page === "tasks") showTasks();
-  });
-});
+    const isTasks = item.dataset.page === "tasks";
+    ["header", "cards", "score"].forEach(cls =>
+      document.querySelector(`.${cls}`).style.display = isTasks ? "none" : (cls === "score" ? "block" : "flex")
+    );
+    document.querySelector(".tasks").style.display = isTasks ? "block" : "none";
+    if (isTasks) showTasks();
+  })
+);
 
 // PRIORITY CLICK
 document.querySelectorAll(".priority button").forEach(btn => {
@@ -160,20 +165,7 @@ document.querySelectorAll(".priority button").forEach(btn => {
     btn.classList.add("active");
   });
 });
-function sortTasks(type) {
-  if (type === "date") {
-    AppState.tasks.sort((a, b) => (a.duedate || "").localeCompare(b.duedate || ""));
-  }
 
-  else if (type === "priority") {
-    const order = { High: 1, Medium: 2, Low: 3 };
-    AppState.tasks.sort((a, b) => order[a.priority] - order[b.priority]);
-  }
-
-  else if (type === "status") {
-    AppState.tasks.sort((a, b) => a.completed - b.completed);
-  }
-}
 // INIT
 loadFromLocal();
 showTasks();
