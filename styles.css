@@ -430,3 +430,94 @@ body {
   color: white;
   border: none;
 }
+/* ===== FINANCE SECTION ===== */
+.finance-section {
+  display: none; /* controlled by JS */
+  gap: 25px;
+  padding: 20px;
+  align-items: flex-start;
+}
+
+/* ===== LEFT CARD ===== */
+.finance-card {
+  flex: 2;
+  background: linear-gradient(135deg, #5f5cff, #6c5ce7);
+  color: white;
+  padding: 30px;
+  border-radius: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* small label */
+.finance-card span {
+  font-size: 12px;
+  opacity: 0.8;
+  letter-spacing: 1px;
+}
+
+/* balance */
+.finance-card h2 {
+  font-size: 40px;
+  margin: 10px 0 25px;
+}
+
+/* ===== INNER BOXES ===== */
+.finance-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-box {
+  flex: 1;
+  background: rgba(255,255,255,0.15);
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.stat-box p {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.stat-box h4 {
+  margin-top: 5px;
+}
+
+/* ===== RIGHT FORM ===== */
+.finance-form {
+  flex: 1;
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.finance-form h4 {
+  margin-bottom: 15px;
+}
+
+/* inputs */
+.finance-form input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #f1f2f6;
+}
+
+/* button */
+.finance-form button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #0f172a;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.finance-form button:hover {
+  opacity: 0.9;
+}

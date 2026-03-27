@@ -147,14 +147,39 @@ function saveFinance() {}
 function saveFocus() {}
 menuItems.forEach(item =>
   item.addEventListener("click", () => {
-    document.querySelector(".active")?.classList.remove("active");
+    document.querySelector(".sidebar li.active")?.classList.remove("active");
     item.classList.add("active");
-    const isTasks = item.dataset.page === "tasks";
-    ["header", "cards", "score"].forEach(cls =>
-      document.querySelector(`.${cls}`).style.display = isTasks ? "none" : (cls === "score" ? "block" : "flex")
-    );
-    document.querySelector(".tasks").style.display = isTasks ? "block" : "none";
-    if (isTasks) showTasks();
+
+    const page = item.dataset.page;
+
+    const header = document.querySelector(".header");
+    const cards = document.querySelector(".cards");
+    const score = document.querySelector(".score");
+    const tasks = document.querySelector(".tasks");
+    const finance = document.querySelector(".finance-section");
+
+    // RESET ALL
+    header.style.display = "none";
+    cards.style.display = "none";
+    score.style.display = "none";
+    tasks.style.display = "none";
+    finance.style.display = "none";
+
+    // SHOW BASED ON PAGE
+    if (page === "dashboard") {
+      header.style.display = "flex";
+      cards.style.display = "flex";
+      score.style.display = "block";
+    }
+
+    if (page === "tasks") {
+      tasks.style.display = "block";
+      showTasks();
+    }
+
+    if (page === "finance") {
+      finance.style.display = "block";
+    }
   })
 );
 
