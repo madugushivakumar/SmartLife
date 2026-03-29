@@ -63,11 +63,15 @@ function saveTask() {
 // ================= ADD BUTTON =================
 const addBtn = document.getElementById("addBtn");
 const input = document.getElementById("taskInput");
+
+input.style.display = "none"; // ✅ FIX
+
 addBtn.addEventListener("click", () => {
-   if (getComputedStyle(input).display === "none") {
+  if (getComputedStyle(input).display === "none") {
     input.style.display = "block";
     return input.focus();
   }
+
   const title = input.value.trim();
   if (!title) return;
 
@@ -79,7 +83,7 @@ addBtn.addEventListener("click", () => {
   });
 
   input.value = "";
-   input.style.display = "none";
+  input.style.display = "none";
   saveToLocal();
   showTasks();
 });
@@ -164,7 +168,6 @@ menuItems.forEach(item =>
     score.style.display = "none";
     tasks.style.display = "none";
     finance.style.display = "none";
-
     // SHOW BASED ON PAGE
     if (page === "dashboard") {
       header.style.display = "flex";

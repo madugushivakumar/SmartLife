@@ -47,7 +47,12 @@ body {
 .main {
   flex: 1;
   padding: 20px 30px;
+ 
 }
+.finance-section{
+  display:none;
+}
+
 /* Topbar */
 .topbar {
   display: flex;
@@ -430,80 +435,88 @@ body {
   color: white;
   border: none;
 }
-
 /* ===== Finance Section Layout ===== */
 .finance-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 25px;
-  padding: 20px;
   width: 100%;
+  margin-top: 20px;
 }
 
 /* Title */
-.finance-section h3 {
-  font-size: 24px;
+.finance-title {
+  font-size: 22px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+/* FLEX CONTAINER */
+.finance-container {
+  display: flex;
+  gap: 30px;
+  align-items: stretch;
 }
 
 /* ===== LEFT CARD ===== */
 .finance-card {
-   width: 65%;
-  min-width: 320px;
-  padding: 25px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #5f5cf0, #6a4df5);
+  flex: 2;
+  min-width: 300px;
+  padding: 30px;
+  border-radius: 25px;
+
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
   color: #fff;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.25);
 }
 
 .finance-card span {
   font-size: 12px;
-  opacity: 0.8;
   letter-spacing: 1px;
+  opacity: 0.8;
 }
 
 .finance-card h2 {
-  font-size: 36px;
-  margin: 10px 0 20px;
+  font-size: 48px;
+  font-weight: 800;
+  margin: 10px 0 25px;
 }
 
-/* Stats */
+/* ===== STATS ===== */
 .finance-stats {
   display: flex;
-  gap: 15px;
+  gap: 20px;
 }
 
 .stat-box {
   flex: 1;
-  background: rgba(255,255,255,0.15);
-  padding: 15px;
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
+  padding: 18px;
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+
+  display: flex;
+  flex-direction: column;
 }
 
 .stat-box p {
-  font-size: 12px;
-  opacity: 0.8;
+  font-size: 11px;
+  opacity: 0.7;
 }
 
 .stat-box h4 {
-  margin-top: 5px;
   font-size: 18px;
+  margin-top: 5px;
 }
 
 /* ===== RIGHT FORM ===== */
 .finance-form {
-    width: 30%;
+  flex: 1;
   min-width: 260px;
-  padding: 20px;
-  margin-left:850px;
-  margin-top:-220px;
+  padding: 25px;
   border-radius: 20px;
-  background: #f4f6fb;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+
+  background: #f8fafc;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
 .finance-form h4 {
@@ -515,28 +528,32 @@ body {
 /* Inputs */
 .finance-form input {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 15px;
+  border-radius: 12px;
   border: none;
-  outline: none;
-  background: #e9ecf5;
+
+  background: #eef1f6;
   font-size: 14px;
 }
 
 /* Button */
 .finance-form button {
   width: 100%;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 14px;
+  border-radius: 15px;
   border: none;
-  background: #0b132b;
+
+  background: #0f172a;
   color: #fff;
+
   font-weight: 600;
+  font-size: 15px;
+
   cursor: pointer;
   transition: 0.3s;
 }
 
 .finance-form button:hover {
-  background: #1c2541;
+  background: #020617;
 }
