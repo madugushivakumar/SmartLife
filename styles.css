@@ -557,3 +557,68 @@ body {
 .finance-form button:hover {
   background: #020617;
 }
+
+
+
+
+
+
+/* ===== SMALL CLEAN IMPROVEMENTS ===== */
+
+/* Slight card polish */
+.card,
+.tasks,
+.score,
+.finance-form {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* Better spacing */
+.cards,
+.bottom {
+  gap: 25px;
+}
+
+/* Smooth hover (very light) */
+.card:hover,
+.finance-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Button small improvement */
+.btn {
+  font-weight: 500;
+}
+.btn:hover {
+  background: #5a4bd8;
+}
+
+/* Input clean focus */
+input:focus {
+  outline: none;
+  border: 1px solid #6c5ce7;
+}
+
+/* Sidebar hover (minimal) */
+.sidebar li:hover {
+  background: #f5f6ff;
+}
+
+/* Task cards clean look */
+.task-card {
+  background: #f7f8fc;
+}
+
+/* Finance form inputs */
+.finance-form input {
+  background: #f1f3f9;
+}
+
+/* Slight rounding consistency */
+.card,
+.tasks,
+.score,
+.finance-card,
+.finance-form {
+  border-radius: 16px;
+}
