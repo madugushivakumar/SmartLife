@@ -31,6 +31,8 @@ document.querySelectorAll(".tab").forEach(btn => {
     document.getElementById(btn.dataset.type).classList.add("active");
   });
 });
+queueMicrotask
+
 
 // SAVE ENTRY
 saveBtn.addEventListener("click", () => {
@@ -63,27 +65,46 @@ function saveTask() {
 // ================= ADD BUTTON =================
 const addBtn = document.getElementById("addBtn");
 const input = document.getElementById("taskInput");
+const priorityInput = document.getElementById("taskPriority");
+const dateInput = document.getElementById("taskDate");
 
-input.style.display = "none"; // ✅ FIX
+// 👉 HIDE INITIALLY
+input.style.display = "none";
+priorityInput.style.display = "none";
+dateInput.style.display = "none";
 
 addBtn.addEventListener("click", () => {
-  if (getComputedStyle(input).display === "none") {
+
+  // 👉 IF HIDDEN → SHOW INPUTS
+  if (input.style.display === "none") {
     input.style.display = "block";
+    priorityInput.style.display = "block";
+    dateInput.style.display = "block";
     return input.focus();
   }
 
+  // 👉 IF VISIBLE → SAVE TASK
   const title = input.value.trim();
+  const priority = priorityInput.value;
+  const duedate = dateInput.value || "No date";
+
   if (!title) return;
 
   AppState.tasks.push({
     title,
-    priority: "Medium",
-    duedate: new Date().toISOString().split("T")[0],
+    priority,
+    duedate,
     completed: false
   });
 
+  // 👉 RESET + HIDE AGAIN
   input.value = "";
+  dateInput.value = "";
+
   input.style.display = "none";
+  priorityInput.style.display = "none";
+  dateInput.style.display = "none";
+
   saveToLocal();
   showTasks();
 });

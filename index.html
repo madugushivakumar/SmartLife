@@ -94,9 +94,22 @@
 
     <!-- ADD TASK INPUT -->
     <div class="add-task">
-    <input type="text" id="taskInput" placeholder="Add a new task..." />
-    <button id="addBtn">Add</button>
-  </div>
+
+  <input type="text" id="taskInput" placeholder="Add a new task..." />
+
+  <!-- NEW: PRIORITY -->
+  <select id="taskPriority">
+    <option value="High">High</option>
+    <option value="Medium" selected>Medium</option>
+    <option value="Low">Low</option>
+  </select>
+
+  <!-- NEW: DATE -->
+  <input type="date" id="taskDate" />
+
+  <button id="addBtn">Add</button>
+
+</div>
 
   <!-- TASK LIST -->
   <div id="taskList"></div>
