@@ -426,6 +426,7 @@ body {
   border-radius: 20px;
   border: none;
   background: #eee;
+   box-shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 
 .add-task button {
