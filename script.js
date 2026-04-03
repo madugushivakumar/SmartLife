@@ -33,7 +33,6 @@ document.querySelectorAll(".tab").forEach(btn => {
 });
 queueMicrotask
 
-
 // SAVE ENTRY
 saveBtn.addEventListener("click", () => {
   const type = document.querySelector(".tab.active").dataset.type;
