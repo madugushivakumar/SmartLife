@@ -5,7 +5,7 @@ const AppState = {
   finance: [],
   focus: []
 };
-
+let currentFilter = "all";
 // ELEMENTS
 const newEntryBtn = document.querySelector(".btn");
 const overlay = document.getElementById("overlay");
@@ -112,21 +112,40 @@ addBtn.addEventListener("click", () => {
 function showTasks() {
   const container = document.getElementById("taskList");
   container.innerHTML = "";
-  AppState.tasks.forEach((task, index) => {
+
+  let filteredTasks = AppState.tasks;
+
+  if (currentFilter === "completed") {
+    filteredTasks = AppState.tasks.filter(t => t.completed);
+  }
+
+  if (currentFilter === "pending") {
+    filteredTasks = AppState.tasks.filter(t => !t.completed);
+  }
+
+  if (filteredTasks.length === 0) {
+    container.innerHTML = `<p class="empty">No tasks found 😴</p>`;
+    return;
+  }
+
+  filteredTasks.forEach((task, index) => {
     let colorClass = task.priority.toLowerCase();
+
     container.innerHTML += `
-      <div class="task-card ${task.completed ? "done" : ""}">
+      <div class="task-card ${task.completed ? "done" : ""} ${colorClass}">
         <input type="checkbox"
           ${task.completed ? "checked" : ""}
           onchange="toggleTask(${index})" />
+
         <div class="task-content">
           <p>${task.title}</p>
           <span class="priority-tag ${colorClass}">
             ${task.priority}
           </span>
-          <small>${task.duedate || ""}</small>
+          <small>${task.duedate}</small>
         </div>
-        <div>
+
+        <div class="task-actions">
           <button onclick="editTask(${index})">✏</button>
           <button onclick="deleteTask(${index})">🗑</button>
         </div>
@@ -217,3 +236,14 @@ document.querySelectorAll(".priority button").forEach(btn => {
 // INIT
 loadFromLocal();
 showTasks();
+document.querySelectorAll(".filter").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    document.querySelector(".filter.active")?.classList.remove("active");
+    btn.classList.add("active");
+
+    currentFilter = btn.dataset.filter;
+
+    showTasks();
+  });
+});

@@ -587,3 +587,22 @@ body {
 .finance-form button:hover {
   background: #020617;
 }
+/* FILTER BUTTONS */
+.filters {
+  display: flex;
+  gap: 10px;
+}
+
+.filter {
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: none;
+  background: #eef1f6;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.filter.active {
+  background: #6c5ce7;
+  color: white;
+}
