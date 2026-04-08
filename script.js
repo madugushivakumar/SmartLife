@@ -237,13 +237,60 @@ document.querySelectorAll(".priority button").forEach(btn => {
 loadFromLocal();
 showTasks();
 document.querySelectorAll(".filter").forEach(btn => {
+  // ===== LIST / CALENDAR TOGGLE =====
+let currentView = "list";
+
+document.querySelectorAll(".view-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    // change active button
+    document.querySelector(".view-btn.active")?.classList.remove("active");
+    btn.classList.add("active");
+
+    currentView = btn.dataset.view;
+
+    if (currentView === "list") {
+      document.getElementById("taskList").style.display = "block";
+      document.getElementById("calendarView").classList.add("hidden");
+
+      showTasks(); // 🔥 IMPORTANT
+    } 
+    else {
+      document.getElementById("taskList").style.display = "none";
+      document.getElementById("calendarView").classList.remove("hidden");
+
+      renderCalendar(); // 🔥 IMPORTANT
+    }
+  });
+});
   btn.addEventListener("click", () => {
 
     document.querySelector(".filter.active")?.classList.remove("active");
     btn.classList.add("active");
 
     currentFilter = btn.dataset.filter;
+function renderCalendar() {
+  const container = document.getElementById("calendarView");
+  container.innerHTML = "";
 
+  for (let i = 1; i <= 31; i++) {
+
+    let dayTasks = AppState.tasks.filter(task => {
+      if (!task.duedate) return false;
+      return new Date(task.duedate).getDate() === i;
+    });
+
+    let html = `<strong>${i}</strong>`;
+
+    dayTasks.forEach(task => {
+      html += `<div class="task-dot ${task.priority.toLowerCase()}">
+        • ${task.title}
+      </div>`;
+    });
+
+    container.innerHTML += `<div class="day">${html}</div>`;
+  }
+}
     showTasks();
   });
 });
