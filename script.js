@@ -31,7 +31,6 @@ document.querySelectorAll(".tab").forEach(btn => {
     document.getElementById(btn.dataset.type).classList.add("active");
   });
 });
-queueMicrotask
 
 // SAVE ENTRY
 saveBtn.addEventListener("click", () => {
@@ -262,31 +261,6 @@ showTasks();
 document.querySelectorAll(".filter").forEach(btn => {
   
   btn.addEventListener("click", () => {
-    // ===== LIST / CALENDAR TOGGLE =====
-let currentView = "list";
-
-document.querySelectorAll(".view-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-
-    document.querySelector(".view-btn.active")?.classList.remove("active");
-    btn.classList.add("active");
-
-    currentView = btn.dataset.view;
-
-    if (currentView === "list") {
-      document.getElementById("taskList").style.display = "block";
-      document.getElementById("calendarView").classList.add("hidden");
-
-      showTasks(); // 🔥 IMPORTANT
-    } 
-    else {
-      document.getElementById("taskList").style.display = "none";
-      document.getElementById("calendarView").classList.remove("hidden");
-
-      renderCalendar(); // 🔥 IMPORTANT
-    }
-  });
-});
 
     document.querySelector(".filter.active")?.classList.remove("active");
     btn.classList.add("active");
