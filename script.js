@@ -259,6 +259,30 @@ document.querySelectorAll(".priority button").forEach(btn => {
 loadFromLocal();
 showTasks();
 document.querySelectorAll(".filter").forEach(btn => {
+  // ===== LIST / CALENDAR TOGGLE =====
+let currentView = "list";
+
+document.querySelectorAll(".view-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    document.querySelector(".view-btn.active")?.classList.remove("active");
+    btn.classList.add("active");
+
+    currentView = btn.dataset.view;
+
+    if (currentView === "list") {
+      document.getElementById("taskList").style.display = "block";
+      document.getElementById("calendarView").classList.add("hidden");
+
+      showTasks();
+    } else {
+      document.getElementById("taskList").style.display = "none";
+      document.getElementById("calendarView").classList.remove("hidden");
+
+      renderCalendar();
+    }
+  });
+});
   
   btn.addEventListener("click", () => {
 
