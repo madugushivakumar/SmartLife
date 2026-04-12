@@ -106,7 +106,27 @@ addBtn.addEventListener("click", () => {
   saveToLocal();
   showTasks();
 });
+function renderCalendar() {
+  const container = document.getElementById("calendarView");
+  container.innerHTML = "";
 
+  for (let i = 1; i <= 31; i++) {
+    let tasks = AppState.tasks.filter(task => {
+      if (!task.duedate) return false;
+      return new Date(task.duedate).getDate() === i;
+    });
+
+    let html = `<strong>${i}</strong>`;
+
+    tasks.forEach(task => {
+      html += `<div class="task-dot ${task.priority.toLowerCase()}">
+        • ${task.title}
+      </div>`;
+    });
+
+    container.innerHTML += `<div class="day">${html}</div>`;
+  }
+}
 // ================= SHOW TASKS =================
 function showTasks() {
   // ===== CALENDAR FUNCTION =====
@@ -293,4 +313,38 @@ document.querySelectorAll(".view-btn").forEach(btn => {
 
     showTasks();
   });
+});
+// ===== FIXED VIEW TOGGLE =====
+document.addEventListener("DOMContentLoaded", () => {
+
+  const listBtn = document.querySelector('[data-view="list"]');
+  const calBtn = document.querySelector('[data-view="calendar"]');
+
+  const taskList = document.getElementById("taskList");
+  const calendarView = document.getElementById("calendarView");
+
+  listBtn.addEventListener("click", () => {
+    // active UI
+    document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+    listBtn.classList.add("active");
+
+    // show list
+    taskList.style.display = "block";
+    calendarView.style.display = "none";
+
+    showTasks(); // 🔥 IMPORTANT
+  });
+
+  calBtn.addEventListener("click", () => {
+    // active UI
+    document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+    calBtn.classList.add("active");
+
+    // show calendar
+    taskList.style.display = "none";
+    calendarView.style.display = "grid";
+
+    renderCalendar(); // 🔥 IMPORTANT
+  });
+
 });
