@@ -95,7 +95,7 @@ addBtn.addEventListener("click", () => {
     completed: false
   });
 
-  // 👉 RESET + HIDE AGAIN
+  //  RESET + HIDE AGAIN
   input.value = "";
   dateInput.value = "";
 
@@ -127,6 +127,7 @@ function renderCalendar() {
     container.innerHTML += `<div class="day">${html}</div>`;
   }
 }
+  
 // ================= SHOW TASKS =================
 function showTasks() {
   // ===== CALENDAR FUNCTION =====
@@ -324,27 +325,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const calendarView = document.getElementById("calendarView");
 
   listBtn.addEventListener("click", () => {
-    // active UI
     document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
     listBtn.classList.add("active");
 
-    // show list
     taskList.style.display = "block";
     calendarView.style.display = "none";
 
-    showTasks(); // 🔥 IMPORTANT
+    showTasks();
   });
 
   calBtn.addEventListener("click", () => {
-    // active UI
     document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
     calBtn.classList.add("active");
 
-    // show calendar
     taskList.style.display = "none";
     calendarView.style.display = "grid";
 
-    renderCalendar(); // 🔥 IMPORTANT
+    renderCalendar();
   });
 
 });
