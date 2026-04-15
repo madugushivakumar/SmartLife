@@ -5,7 +5,10 @@ const AppState = {
   finance: [],
   focus: []
 };
+
 let currentFilter = "all";
+let currentDate = new Date(); // ✅ ADDED
+
 // ELEMENTS
 const newEntryBtn = document.querySelector(".btn");
 const overlay = document.getElementById("overlay");
@@ -41,11 +44,12 @@ saveBtn.addEventListener("click", () => {
   overlay.classList.add("hidden");
 });
 
-// =================SAVE TASK =================
+// ================= SAVE TASK =================
 function saveTask() {
   const title = document.querySelector("#task input").value;
   const priority = document.querySelector(".priority button.active").innerText;
   const duedate = document.getElementById("dueDate").value;
+
   if (!title.trim()) return;
 
   AppState.tasks.push({
@@ -66,14 +70,11 @@ const input = document.getElementById("taskInput");
 const priorityInput = document.getElementById("taskPriority");
 const dateInput = document.getElementById("taskDate");
 
-// 👉 HIDE INITIALLY
 input.style.display = "none";
 priorityInput.style.display = "none";
 dateInput.style.display = "none";
 
 addBtn.addEventListener("click", () => {
-
-  // 👉 IF HIDDEN → SHOW INPUTS
   if (input.style.display === "none") {
     input.style.display = "block";
     priorityInput.style.display = "block";
@@ -81,7 +82,6 @@ addBtn.addEventListener("click", () => {
     return input.focus();
   }
 
-  // 👉 IF VISIBLE → SAVE TASK
   const title = input.value.trim();
   const priority = priorityInput.value;
   const duedate = dateInput.value || "No date";
@@ -95,7 +95,6 @@ addBtn.addEventListener("click", () => {
     completed: false
   });
 
-  //  RESET + HIDE AGAIN
   input.value = "";
   dateInput.value = "";
 
@@ -106,43 +105,63 @@ addBtn.addEventListener("click", () => {
   saveToLocal();
   showTasks();
 });
+
+// ================= ADVANCED CALENDAR =================
 function renderCalendar() {
   const container = document.getElementById("calendarView");
+  const monthYear = document.getElementById("monthYear");
+
   container.innerHTML = "";
 
-  for (let i = 1; i <= 31; i++) {
-    let tasks = AppState.tasks.filter(task => {
-      if (!task.duedate) return false;
-      return new Date(task.duedate).getDate() === i;
-    });
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
 
-    let html = `<strong>${i}</strong>`;
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    tasks.forEach(task => {
-      html += `<div class="task-dot ${task.priority.toLowerCase()}">
-        • ${task.title}
-      </div>`;
-    });
+  const today = new Date();
 
-    container.innerHTML += `<div class="day">${html}</div>`;
+  const monthNames = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+
+  if (monthYear) {
+    monthYear.innerText = `${monthNames[month]} ${year}`;
   }
-}
-  
-// ================= SHOW TASKS =================
-function showTasks() {
-  // ===== CALENDAR FUNCTION =====
-function renderCalendar() {
-  const container = document.getElementById("calendarView");
-  container.innerHTML = "";
 
-  for (let i = 1; i <= 31; i++) {
+  // Weekdays
+  const weekdays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  let weekHTML = `<div class="weekdays">`;
+  weekdays.forEach(day => weekHTML += `<div>${day}</div>`);
+  weekHTML += `</div>`;
+  container.innerHTML += weekHTML;
+
+  // Empty cells
+  for (let i = 0; i < firstDay; i++) {
+    container.innerHTML += `<div></div>`;
+  }
+
+  // Days
+  for (let i = 1; i <= daysInMonth; i++) {
 
     let dayTasks = AppState.tasks.filter(task => {
       if (!task.duedate) return false;
-      return new Date(task.duedate).getDate() === i;
+      const d = new Date(task.duedate);
+      return d.getDate() === i &&
+             d.getMonth() === month &&
+             d.getFullYear() === year;
     });
 
-    let html = `<strong>${i}</strong>`;
+    let isToday =
+      i === today.getDate() &&
+      month === today.getMonth() &&
+      year === today.getFullYear();
+
+   let html = `
+  <strong>${i}</strong>
+  ${isToday ? `<span class="today-label">Today</span>` : ""}
+`;
 
     dayTasks.forEach(task => {
       html += `<div class="task-dot ${task.priority.toLowerCase()}">
@@ -150,9 +169,16 @@ function renderCalendar() {
       </div>`;
     });
 
-    container.innerHTML += `<div class="day">${html}</div>`;
+    container.innerHTML += `
+      <div class="day ${isToday ? "today" : ""}">
+        ${html}
+      </div>
+    `;
   }
 }
+
+// ================= SHOW TASKS =================
+function showTasks() {
   const container = document.getElementById("taskList");
   container.innerHTML = "";
 
@@ -171,14 +197,15 @@ function renderCalendar() {
     return;
   }
 
-  filteredTasks.forEach((task, index) => {
+  filteredTasks.forEach((task) => {
+    const realIndex = AppState.tasks.indexOf(task);
     let colorClass = task.priority.toLowerCase();
 
     container.innerHTML += `
       <div class="task-card ${task.completed ? "done" : ""} ${colorClass}">
         <input type="checkbox"
           ${task.completed ? "checked" : ""}
-          onchange="toggleTask(${index})" />
+          onchange="toggleTask(${realIndex})" />
 
         <div class="task-content">
           <p>${task.title}</p>
@@ -189,8 +216,8 @@ function renderCalendar() {
         </div>
 
         <div class="task-actions">
-          <button onclick="editTask(${index})">✏</button>
-          <button onclick="deleteTask(${index})">🗑</button>
+          <button onclick="editTask(${realIndex})">✏</button>
+          <button onclick="deleteTask(${realIndex})">🗑</button>
         </div>
       </div>
     `;
@@ -228,94 +255,18 @@ function saveToLocal() {
   localStorage.setItem("tasks", JSON.stringify(AppState.tasks));
 }
 
-// ================= OTHER =================
-function saveFinance() {}
-function saveFocus() {}
-menuItems.forEach(item =>
-  item.addEventListener("click", () => {
-    document.querySelector(".sidebar li.active")?.classList.remove("active");
-    item.classList.add("active");
-
-    const page = item.dataset.page;
-
-    const header = document.querySelector(".header");
-    const cards = document.querySelector(".cards");
-    const score = document.querySelector(".score");
-    const tasks = document.querySelector(".tasks");
-    const finance = document.querySelector(".finance-section");
-
-    // RESET ALL
-    header.style.display = "none";
-    cards.style.display = "none";
-    score.style.display = "none";
-    tasks.style.display = "none";
-    finance.style.display = "none";
-    // SHOW BASED ON PAGE
-    if (page === "dashboard") {
-      header.style.display = "flex";
-      cards.style.display = "flex";
-      score.style.display = "block";
-    }
-
-    if (page === "tasks") {
-      tasks.style.display = "block";
-      showTasks();
-    }
-
-    if (page === "finance") {
-      finance.style.display = "block";
-    }
-  })
-);
-
-// PRIORITY CLICK
-document.querySelectorAll(".priority button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".priority button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-  });
-});
-
-// INIT
-loadFromLocal();
-showTasks();
+// ================= FILTER =================
 document.querySelectorAll(".filter").forEach(btn => {
-  // ===== LIST / CALENDAR TOGGLE =====
-let currentView = "list";
-
-document.querySelectorAll(".view-btn").forEach(btn => {
   btn.addEventListener("click", () => {
-
-    document.querySelector(".view-btn.active")?.classList.remove("active");
-    btn.classList.add("active");
-
-    currentView = btn.dataset.view;
-
-    if (currentView === "list") {
-      document.getElementById("taskList").style.display = "block";
-      document.getElementById("calendarView").classList.add("hidden");
-
-      showTasks();
-    } else {
-      document.getElementById("taskList").style.display = "none";
-      document.getElementById("calendarView").classList.remove("hidden");
-
-      renderCalendar();
-    }
-  });
-});
-  
-  btn.addEventListener("click", () => {
-
     document.querySelector(".filter.active")?.classList.remove("active");
     btn.classList.add("active");
 
     currentFilter = btn.dataset.filter;
-
     showTasks();
   });
 });
-// ===== FIXED VIEW TOGGLE =====
+
+// ================= VIEW TOGGLE =================
 document.addEventListener("DOMContentLoaded", () => {
 
   const listBtn = document.querySelector('[data-view="list"]');
@@ -344,4 +295,19 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCalendar();
   });
 
+  // ✅ Month navigation
+  document.getElementById("prevMonth")?.addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+  });
+
+  document.getElementById("nextMonth")?.addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+  });
+
 });
+
+// INIT
+loadFromLocal();
+showTasks();
