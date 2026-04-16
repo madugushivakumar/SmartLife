@@ -670,3 +670,14 @@ body {
   color: #6c5ce7;
   margin-top: 3px;
 }
+.today-tasks {
+  background: #f1f3ff;
+  padding: 10px 15px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.today-tasks strong {
+  color: #6c5ce7;
+}
