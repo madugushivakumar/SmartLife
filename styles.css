@@ -681,3 +681,7 @@ body {
 .today-tasks strong {
   color: #6c5ce7;
 }
+.task-card.overdue {
+  border-left: 5px solid #e74c3c;
+  background: #fff5f5;
+}

@@ -202,7 +202,7 @@ function showTasks() {
     let colorClass = task.priority.toLowerCase();
 
     container.innerHTML += `
-      <div class="task-card ${task.completed ? "done" : ""} ${colorClass}">
+      <div class="task-card ${task.completed ? "done" : ""} ${colorClass} ${isOverdue ? "overdue" : ""}">
         <input type="checkbox"
           ${task.completed ? "checked" : ""}
           onchange="toggleTask(${realIndex})" />
