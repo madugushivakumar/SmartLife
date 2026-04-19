@@ -694,3 +694,16 @@ body {
   background: #eef1f6;
   font-size: 14px;
 }
+.task-stats {
+  display: flex;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.task-stats .stat {
+  background: #eef1f6;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
