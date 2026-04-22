@@ -275,15 +275,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const taskList = document.getElementById("taskList");
   const calendarView = document.getElementById("calendarView");
 
-  listBtn.addEventListener("click", () => {
-    document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
-    listBtn.classList.add("active");
+ listBtn.addEventListener("click", () => {
+  document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+  listBtn.classList.add("active");
 
-    taskList.style.display = "block";
-    calendarView.style.display = "none";
+  // show BOTH list + calendar
+  taskList.style.display = "block";
+  calendarView.style.display = "grid";
 
-    showTasks();
-  });
+  showTasks();
+  renderCalendar();
+});
 
   calBtn.addEventListener("click", () => {
     document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
