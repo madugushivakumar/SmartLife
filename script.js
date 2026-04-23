@@ -193,9 +193,15 @@ function showTasks() {
   }
 
   if (filteredTasks.length === 0) {
-    container.innerHTML = `<p class="empty">No tasks found 😴</p>`;
-    return;
-  }
+  container.innerHTML = `
+    <div class="empty-state">
+      <h2>📋</h2>
+      <p>No tasks yet</p>
+      <small>Add your first task to get started</small>
+    </div>
+  `;
+  return;
+}
 
   filteredTasks.forEach((task) => {
     const realIndex = AppState.tasks.indexOf(task);
@@ -275,17 +281,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const taskList = document.getElementById("taskList");
   const calendarView = document.getElementById("calendarView");
 
- listBtn.addEventListener("click", () => {
-  document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
-  listBtn.classList.add("active");
+  listBtn.addEventListener("click", () => {
+    document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+    listBtn.classList.add("active");
 
-  // show BOTH list + calendar
-  taskList.style.display = "block";
-  calendarView.style.display = "grid";
+    taskList.style.display = "block";
+    calendarView.style.display = "none";
 
-  showTasks();
-  renderCalendar();
-});
+    showTasks();
+  });
 
   calBtn.addEventListener("click", () => {
     document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
