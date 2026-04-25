@@ -494,3 +494,31 @@ function saveFocus() {}
 loadFromLocal();
 showTasks();
 renderCalendar();
+
+updateLiveHeader();
+setInterval(updateLiveHeader, 1000);
+function updateLiveHeader() {
+  const greeting = document.getElementById("greeting");
+  const liveDate = document.getElementById("liveDate");
+  const liveTime = document.getElementById("liveTime");
+
+  const now = new Date();
+  const hour = now.getHours();
+
+  let text = "Daily Overview";
+
+  if (hour < 12) text = "Good Morning 👋";
+  else if (hour < 17) text = "Good Afternoon ☀";
+  else text = "Good Evening 🌙";
+
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  };
+
+  greeting.innerText = text;
+  liveDate.innerText = now.toLocaleDateString("en-US", options);
+  liveTime.innerText = now.toLocaleTimeString();
+}
