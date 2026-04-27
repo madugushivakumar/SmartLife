@@ -498,19 +498,16 @@ body {
   letter-spacing: 1px;
   opacity: 0.8;
 }
-
 .finance-card h2 {
   font-size: 48px;
   font-weight: 800;
   margin: 10px 0 25px;
 }
-
 /* ===== STATS ===== */
 .finance-stats {
   display: flex;
   gap: 20px;
 }
-
 .stat-box {
   flex: 1;
   padding: 18px;
@@ -520,17 +517,14 @@ body {
   display: flex;
   flex-direction: column;
 }
-
 .stat-box p {
   font-size: 11px;
   opacity: 0.7;
 }
-
 .stat-box h4 {
   font-size: 18px;
   margin-top: 5px;
 }
-
 /* ===== RIGHT FORM ===== */
 .finance-form {
   flex: 1;
@@ -540,13 +534,11 @@ body {
   background: #f8fafc;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
-
 .finance-form h4 {
   margin-bottom: 15px;
   font-size: 16px;
   font-weight: 600;
 }
-
 /* Inputs */
 .finance-form input {
   width: 100%;
@@ -557,7 +549,6 @@ body {
   background: #eef1f6;
   font-size: 14px;
 }
-
 /* Button */
 .finance-form button {
   width: 100%;
@@ -571,7 +562,6 @@ body {
   cursor: pointer;
   transition: 0.3s;
 }
-
 .finance-form button:hover {
   background: #020617;
 }
@@ -580,7 +570,6 @@ body {
   display: flex;
   gap: 10px;
 }
-
 .view-btn {
   padding: 6px 14px;
   border-radius: 12px;
@@ -588,17 +577,14 @@ body {
   background: #eef1f6;
   cursor: pointer;
 }
-
 .view-btn.active {
   background: #6c5ce7;
   color: white;
 }
-
 /* HIDE */
 .hidden {
   display: none;
 }
-
 /* CALENDAR */
 .calendar {
   margin-top: 20px;
@@ -606,7 +592,6 @@ body {
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
 }
-
 .day {
   background: #f8f9fc;
   border-radius: 12px;
@@ -614,18 +599,15 @@ body {
   min-height: 80px;
   font-size: 12px;
 }
-
 .day strong {
   display: block;
   margin-bottom: 5px;
 }
-
 .task-dot {
   font-size: 10px;
   margin-top: 5px;
   display: block;
 }
-
 /* COLORS */
 .task-dot.high { color: #e74c3c; }
 .task-dot.medium { color: #f39c12; }
@@ -637,12 +619,10 @@ body {
   align-items: center;
   margin-top: 15px;
 }
-
 .calendar-header h4 {
   font-size: 16px;
   font-weight: 600;
 }
-
 .calendar-header button {
   border: none;
   background: #eef1f6;
@@ -650,7 +630,6 @@ body {
   border-radius: 10px;
   cursor: pointer;
 }
-
 /* WEEK DAYS */
 .weekdays {
   display: grid;
@@ -659,7 +638,6 @@ body {
   font-size: 12px;
   color: gray;
 }
-
 /* DAY */
 .day.today {
   border: 2px solid #6c5ce7;
@@ -677,7 +655,6 @@ body {
   margin-bottom: 10px;
   font-size: 13px;
 }
-
 .today-tasks strong {
   color: #6c5ce7;
 }
@@ -685,4 +662,39 @@ body {
   border-left: 5px solid #e74c3c;
   background: #fff5f5;
 }
+/* Calendar boxes */
+.day-box {
+  background: #f8f9fc;
+  border-radius: 18px;
+  min-height: 110px;
+  padding: 12px;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
 
+/* Hover effect */
+.day-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+}
+
+/* Today highlight */
+.day-box.today {
+  border: 2px solid #6c5ce7;
+  background: #f3f0ff;
+}
+
+/* Date number */
+.day-number {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Week names */
+.week-name {
+  text-align: center;
+  font-weight: 700;
+  color: #6b7280;
+  padding-bottom: 10px;
+}

@@ -232,13 +232,7 @@ function showTasks() {
 
   taskList.innerHTML = "";
 
- let filteredTasks = [...AppState.tasks];
-
-if (searchText.trim() !== "") {
-  filteredTasks = filteredTasks.filter(task =>
-    task.title.toLowerCase().includes(searchText.toLowerCase())
-  );
-}
+  let filteredTasks = [...AppState.tasks];
 
   if (currentFilter === "completed") {
     filteredTasks = filteredTasks.filter(t => t.completed);

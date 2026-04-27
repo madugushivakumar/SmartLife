@@ -6,38 +6,28 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-
 <div class="container">
-
   <!-- Sidebar -->
   <aside class="sidebar">
     <h2 class="logo">SmartLife</h2>
-
     <ul>
       <li class="active" data-page="dashboard">Dashboard</li>
       <li data-page="tasks">Tasks</li>
       <li data-page="finance">Finance</li>
       <li data-page="focus">Focus</li>
     </ul>
-
     <div class="collapse">Collapse Menu</div>
   </aside>
-
   <!-- Main -->
   <main class="main">
-
     <!-- Topbar -->
     <div class="topbar">
-
       <input type="text" placeholder="Search tasks, finances, or settings..." />
-
       <div class="right-section">
-
         <div class="notification">
           🔔
           <span class="dot"></span>
         </div>
-
         <div class="profile-box">
           <div class="profile-text">
             <h4>John Doe</h4>
@@ -45,11 +35,8 @@
           </div>
           <div class="avatar"></div>
         </div>
-
       </div>
-
     </div>
-
     <!-- Header -->
     <div class="header">
       <div>
@@ -58,36 +45,28 @@
       </div>
       <button class="btn">+ New Entry</button>
     </div>
-
     <!-- Cards -->
     <div class="cards">
-
       <div class="card">
         <span class="tag green">+12.5%</span>
         <p>TASKS DONE</p>
         <h2>24/30</h2>
       </div>
-
       <div class="card">
         <span class="tag yellow">On Track</span>
         <p>FOCUS TIME</p>
         <h2>4.5 hrs</h2>
       </div>
-
       <div class="card">
         <span class="tag red">-$240.00</span>
         <p>DAILY SPENDING</p>
         <h2>$1,240.50</h2>
       </div>
-
     </div>
-
     <!-- Bottom -->
     <div class="bottom">
-
       <!-- Tasks -->
      <div class="tasks">
-
    <div class="tasks-header">
     <h3>Task Manager</h3>
     <div class="calendar-header">
@@ -103,56 +82,40 @@
     <div id="todayTasks" class="today-tasks"></div>
     <div id="taskList"></div>
 <div id="calendarView" class="calendar hidden"></div>
-
     <!-- ADD TASK INPUT -->
     <div class="add-task">
-
   <input type="text" id="taskInput" placeholder="Add a new task..." />
-
   <!-- NEW: PRIORITY -->
   <select id="taskPriority">
     <option value="High">High</option>
     <option value="Medium" selected>Medium</option>
     <option value="Low">Low</option>
   </select>
-
   <!-- NEW: DATE -->
   <input type="date" id="taskDate" />
-
   <button id="addBtn">Add</button>
-
 </div>
-
-
   <!-- TASK LIST -->
-
-
 </div>
 <!-- Finance Section -->
 <div class="finance-section">
-
   <h3 class="finance-title">Finance Tracker</h3>
-
   <div class="finance-container">
-
     <!-- LEFT SIDE -->
     <div class="finance-card">
       <span>TOTAL BALANCE</span>
       <h2>$12,450.80</h2>
-
       <div class="finance-stats">
         <div class="stat-box">
           <p>INCOME</p>
           <h4>+$4,200.00</h4>
         </div>
-
         <div class="stat-box">
           <p>EXPENSES</p>
           <h4>-$1,850.00</h4>
         </div>
       </div>
     </div>
-
     <!-- RIGHT SIDE -->
     <div class="finance-form">
       <h4>Quick Transfer</h4>
@@ -160,9 +123,7 @@
       <input type="number" placeholder="Amount" />
       <button>Send Money</button>
     </div>
-
   </div>
-
 </div>
       <!-- Score -->
       <div class="score">
@@ -172,17 +133,12 @@
           <p>Excellent</p>
         </div>
       </div>
-
     </div>
-
   </main>
-
 </div>
 <!-- Overlay Modal -->
 <div id="overlay" class="overlay hidden">
-
   <div class="entry-card">
-
     <!-- Header -->
     <div class="entry-header">
       <div>
@@ -191,60 +147,46 @@
       </div>
       <span id="closeBtn" class="close">&times;</span>
     </div>
-
     <!-- Tabs -->
     <div class="entry-tabs">
       <button class="tab active" data-type="task">TASK</button>
       <button class="tab" data-type="finance">FINANCE</button>
       <button class="tab" data-type="focus">FOCUS</button>
     </div>
-
     <!-- Sections -->
     <div class="entry-body">
-
       <!-- TASK -->
       <div id="task" class="section active">
         <label>TASK TITLE</label>
         <input type="text" placeholder="What needs to be done?" />
-
         <label>PRIORITY</label>
        <div class="priority">
   <button class="high">High</button>
   <button class="medium active">Medium</button>
   <button class="low">Low</button>
 </div>
-
   <label>DUE DATE</label>
   <input type="date" id="dueDate">
       </div>
-
       <!-- FINANCE -->
       <div id="finance" class="section">
         <label>AMOUNT</label>
         <input type="number" placeholder="Enter amount" />
-
         <label>CATEGORY</label>
         <input type="text" placeholder="Food, Rent..." />
       </div>
-
       <!-- FOCUS -->
       <div id="focus" class="section">
         <label>FOCUS TIME</label>
         <input type="time" />
-
         <label>MODE</label>
         <input type="text" placeholder="Deep work / Study" />
       </div>
-
     </div>
-
     <!-- Button -->
     <button class="save-btn">SAVE ENTRY</button>
-
   </div>
-
 </div>
-
 <script src="script.js"></script>
 </body>
 </html>
