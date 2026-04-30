@@ -223,6 +223,34 @@ function showTasks() {
     `;
   });
 }
+function showTodayTasks() {
+  const container = document.getElementById("todayTasks");
+  if (!container) return;
+
+  const today = new Date();
+
+  const todaysTasks = AppState.tasks.filter(task => {
+    if (!task.duedate || task.duedate === "No date") return false;
+
+    const d = new Date(task.duedate);
+
+    return (
+      d.getDate() === today.getDate() &&
+      d.getMonth() === today.getMonth() &&
+      d.getFullYear() === today.getFullYear()
+    );
+  });
+
+  if (todaysTasks.length === 0) {
+    container.innerHTML = `<strong>Today:</strong> No tasks 😴`;
+    return;
+  }
+
+  container.innerHTML = `<strong>Today:</strong>`;
+  todaysTasks.forEach(t => {
+    container.innerHTML += ` • ${t.title}`;
+  });
+}
 /* ===============================
    TASK ACTIONS
 ================================= */
