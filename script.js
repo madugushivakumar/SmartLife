@@ -201,7 +201,24 @@ function showTasks() {
   }
   filteredTasks.forEach(task => {
     const realIndex = AppState.tasks.indexOf(task);
-    const colorClass = task.priority.toLowerCase();
+    
+    let isOverdue = false;
+
+if (
+  task.duedate &&
+  task.duedate !== "No date" &&
+  !task.completed
+) {
+  const today = new Date();
+  const due = new Date(task.duedate);
+
+  today.setHours(0,0,0,0);
+  due.setHours(0,0,0,0);
+
+  if (due < today) {
+    isOverdue = true;
+  }
+}
     taskList.innerHTML += `
       <div class="task-card ${task.completed ? "done" : ""}">
         <input type="checkbox"
