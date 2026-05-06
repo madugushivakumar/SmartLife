@@ -113,7 +113,7 @@ addBtn?.addEventListener("click", () => {
   renderCalendar();
 });
 /* ===============================
-   CALENDAR
+   PREMIUM CALENDAR RENDER
 ================================= */
 function renderCalendar() {
   if (!calendarView) return;
@@ -121,63 +121,105 @@ function renderCalendar() {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInMonth =
+    new Date(year, month + 1, 0).getDate();
   const today = new Date();
   const monthNames = [
-    "January","February","March","April","May","June",
-    "July","August","September","October","November","December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
   ];
+  /* MONTH TITLE */
   if (monthYear) {
-    monthYear.innerText = `${monthNames[month]} ${year}`;
+    monthYear.innerText =
+      `${monthNames[month]} ${year}`;
   }
-  // WEEKDAYS
-  const weekdays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  let weekRow = `<div class="weekdays">`;
-  weekdays.forEach(day => {
-    weekRow += `<div>${day}</div>`;
+  /* WEEK DAYS */
+  const weekDays = [
+    "SUN",
+    "MON",
+    "TUE",
+    "WED",
+    "THU",
+    "FRI",
+    "SAT"
+  ];
+  weekDays.forEach(day => {
+    calendarView.innerHTML += `
+      <div class="week-name">
+        ${day}
+      </div>
+    `;
   });
-  weekRow += `</div>`;
-  calendarView.innerHTML += weekRow;
-  // EMPTY SPACES
+  /* EMPTY BOXES */
   for (let i = 0; i < firstDay; i++) {
-    calendarView.innerHTML += `<div></div>`;
+    calendarView.innerHTML += `
+      <div class="empty-box"></div>
+    `;
   }
-  // DAYS
-  for (let i = 1; i <= daysInMonth; i++) {
+  /* DATES */
+  for (let date = 1; date <= daysInMonth; date++) {
+    const isToday =
+      date === today.getDate() &&
+      month === today.getMonth() &&
+      year === today.getFullYear();
+    /* FILTER TASKS FOR CURRENT DATE */
     const tasksForDay = AppState.tasks.filter(task => {
-      if (!task.duedate || task.duedate === "No date") return false;
+      if (
+        !task.duedate ||
+        task.duedate === "No date"
+      ) {
+        return false;
+      }
       const d = new Date(task.duedate);
       return (
-        d.getDate() === i &&
+        d.getDate() === date &&
         d.getMonth() === month &&
         d.getFullYear() === year
       );
     });
-    const isToday =
-      i === today.getDate() &&
-      month === today.getMonth() &&
-      year === today.getFullYear();
-    let html = `<span class="day-number">${i}</span>`;
-    // SHOW ONLY 2 TASKS
-    const visibleTasks = tasksForDay.slice(0, 2);
-    visibleTasks.forEach(task => {
-      html += `
+    let taskHTML = "";
+    /* SHOW ONLY 2 TASKS */
+    tasksForDay.slice(0, 2).forEach(task => {
+      taskHTML += `
         <div class="task-dot ${task.priority.toLowerCase()}">
           • ${task.title}
         </div>
       `;
     });
-    // 👉 MORE TASKS
+    /* MORE TASKS */
     if (tasksForDay.length > 2) {
-      html += `
+      taskHTML += `
         <div class="more-tasks">
           +${tasksForDay.length - 2} more
         </div>
       `;
     }
+    /* TODAY LABEL */
+    const todayLabel = isToday
+      ? `<span class="today-label">Today</span>`
+      : "";
+    /* FINAL DAY CARD */
     calendarView.innerHTML += `
       <div class="day-box ${isToday ? "today" : ""}">
-        ${html}
+        <div class="day-top">
+          <span class="day-number">
+            ${date}
+          </span>
+          ${todayLabel}
+        </div>
+        <div class="calendar-tasks">
+          ${taskHTML}
+        </div>
       </div>
     `;
   }
@@ -201,24 +243,7 @@ function showTasks() {
   }
   filteredTasks.forEach(task => {
     const realIndex = AppState.tasks.indexOf(task);
-    
-    let isOverdue = false;
-
-if (
-  task.duedate &&
-  task.duedate !== "No date" &&
-  !task.completed
-) {
-  const today = new Date();
-  const due = new Date(task.duedate);
-
-  today.setHours(0,0,0,0);
-  due.setHours(0,0,0,0);
-
-  if (due < today) {
-    isOverdue = true;
-  }
-}
+    const colorClass = task.priority.toLowerCase();
     taskList.innerHTML += `
       <div class="task-card ${task.completed ? "done" : ""}">
         <input type="checkbox"
