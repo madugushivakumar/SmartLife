@@ -1,540 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SmartLife Dashboard</title>
-
-<style>
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Arial, sans-serif;
-}
-
-body{
-  background:#f3f4f6;
-  transition:0.3s;
-}
-
-.container{
-  display:flex;
-  min-height:100vh;
-}
-
-/* SIDEBAR */
-
-.sidebar{
-  width:250px;
-  background:#111827;
-  color:white;
-  padding:25px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.logo{
-  font-size:30px;
-  margin-bottom:30px;
-  color:#38bdf8;
-}
-
-.sidebar ul{
-  list-style:none;
-}
-
-.sidebar ul li{
-  padding:14px;
-  margin:10px 0;
-  border-radius:10px;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-.sidebar ul li:hover,
-.sidebar ul .active{
-  background:#1f2937;
-}
-
-.sidebar-footer{
-  color:#aaa;
-  font-size:14px;
-}
-
-/* MAIN */
-
-.main{
-  flex:1;
-  padding:25px;
-}
-
-/* TOPBAR */
-
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:25px;
-}
-
-.search-box{
-  width:50%;
-  padding:12px;
-  border:none;
-  border-radius:12px;
-  background:white;
-}
-
-.right-section{
-  display:flex;
-  align-items:center;
-  gap:20px;
-}
-
-.clock{
-  font-weight:bold;
-  font-size:18px;
-}
-
-.dark-toggle{
-  padding:10px 16px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  background:#111827;
-  color:white;
-}
-
-/* HEADER */
-
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:25px;
-}
-
-.btn{
-  background:#2563eb;
-  color:white;
-  border:none;
-  padding:12px 18px;
-  border-radius:12px;
-  cursor:pointer;
-}
-
-/* CARDS */
-
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
-  margin-bottom:25px;
-}
-
-.card{
-  background:white;
-  padding:22px;
-  border-radius:18px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
-  transition:0.3s;
-}
-
-.card:hover{
-  transform:translateY(-5px);
-}
-
-.tag{
-  display:inline-block;
-  padding:5px 10px;
-  border-radius:20px;
-  font-size:12px;
-  margin-bottom:12px;
-}
-
-.green{
-  background:#dcfce7;
-  color:#166534;
-}
-
-.yellow{
-  background:#fef9c3;
-  color:#854d0e;
-}
-
-.red{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-/* WIDGETS */
-
-.widgets{
-  display:grid;
-  grid-template-columns:2fr 1fr;
-  gap:20px;
-  margin-bottom:25px;
-}
-
-.widget{
-  background:white;
-  padding:20px;
-  border-radius:18px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
-}
-
-/* TASKS */
-
-.task-input{
-  display:flex;
-  gap:10px;
-  margin-top:20px;
-}
-
-.task-input input,
-.task-input select{
-  padding:10px;
-  border-radius:10px;
-  border:1px solid #ccc;
-}
-
-.task-input button{
-  background:#10b981;
-  color:white;
-  border:none;
-  padding:10px 16px;
-  border-radius:10px;
-  cursor:pointer;
-}
-
-.task{
-  background:#f9fafb;
-  padding:12px;
-  border-radius:10px;
-  margin:10px 0;
-}
-
-/* PROGRESS */
-
-.progress{
-  width:100%;
-  height:18px;
-  background:#e5e7eb;
-  border-radius:20px;
-  overflow:hidden;
-  margin-top:15px;
-}
-
-.progress-bar{
-  width:82%;
-  height:100%;
-  background:#2563eb;
-}
-
-/* NOTES */
-
-.notes textarea{
-  width:100%;
-  height:120px;
-  margin-top:15px;
-  border:none;
-  outline:none;
-  resize:none;
-  padding:12px;
-  border-radius:12px;
-  background:#f3f4f6;
-}
-
-/* DARK MODE */
-
-.dark-mode{
-  background:#0f172a;
-  color:white;
-}
-
-.dark-mode .card,
-.dark-mode .widget{
-  background:#1e293b;
-  color:white;
-}
-
-.dark-mode .task{
-  background:#334155;
-}
-
-.dark-mode .search-box{
-  background:#1e293b;
-  color:white;
-}
-
-</style>
+  <meta charset="UTF-8" />
+  <title>SmartLife Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-
 <div class="container">
-
-<!-- SIDEBAR -->
-
-<aside class="sidebar">
-
-<div>
-
-<h2 class="logo">SmartLife</h2>
-
-<ul>
-<li class="active">Dashboard</li>
-<li>Tasks</li>
-<li>Finance</li>
-<li>Focus</li>
-<li>Analytics</li>
-<li>Settings</li>
-</ul>
-
+  
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">SmartLife</h2>
+    <ul>
+      <li class="active" data-page="dashboard">Dashboard</li>
+      <li data-page="tasks">Tasks</li>
+      <li data-page="finance">Finance</li>
+      <li data-page="focus">Focus</li>
+    </ul>
+    <div class="collapse">Collapse Menu</div>
+  </aside>
+  <!-- Main -->
+  <main class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+      <input type="text" placeholder="Search tasks, finances, or settings..." />
+      <div class="right-section">
+        <div class="notification">
+          🔔
+          <span class="dot"></span>
+        </div>
+        <div class="profile-box">
+          <div class="profile-text">
+            <h4>John Doe</h4>
+            <p>PREMIUM USER</p>
+          </div>
+          <div class="avatar"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <h1>Daily Overview</h1>
+        <p class="date">Wednesday, March 18, 2026</p>
+      </div>
+      <button class="btn">+ New Entry</button>
+      
+    </div>
+    <!-- Cards -->
+    <div class="cards">
+      <div class="card">
+        <span class="tag green">+12.5%</span>
+        <p>TASKS DONE</p>
+        <h2>24/30</h2>
+      </div>
+      <div class="card">
+        <span class="tag yellow">On Track</span>
+        <p>FOCUS TIME</p>
+        <h2>4.5 hrs</h2>
+      </div>
+      <div class="card">
+        <span class="tag red">-$240.00</span>
+        <p>DAILY SPENDING</p>
+        <h2>$1,240.50</h2>
+      </div>
+    </div>
+    <!-- Bottom -->
+    <div class="bottom">
+      <!-- Tasks -->
+     <div class="tasks">
+   <div class="tasks-header">
+    <h3>Task Manager</h3>
+    <div class="calendar-header">
+  <button id="prevMonth">←</button>
+  <h4 id="monthYear"></h4>
+  <button id="nextMonth">→</button>
+    <button id="Month">←</button>
+      <button id="NextvMonth">←</button>
+  <button id="prevMonth">←</button>
 </div>
-
-<div class="sidebar-footer">
-SmartLife Pro Version 2.5
+ <div class="view-toggle">
+  <button class="view-btn active" data-view="list">List</button>
+  <button class="view-btn" data-view="calendar">Calendar</button>
 </div>
-
-</aside>
-
-<!-- MAIN -->
-
-<main class="main">
-
-<!-- TOPBAR -->
-
-<div class="topbar">
-
-<input 
-type="text" 
-class="search-box"
-placeholder="Search tasks, finances, settings..."
-/>
-
-<div class="right-section">
-
-<div class="clock" id="clock"></div>
-
-<button class="dark-toggle" id="darkBtn">
-Dark Mode
-</button>
-
+    </div>
+    <div id="todayTasks" class="today-tasks"></div>
+    <div id="taskList"></div>
+<div id="calendarView" class="calendar hidden"></div>
+    <!-- ADD TASK INPUT -->
+    <div class="add-task">
+  <input type="text" id="taskInput" placeholder="Add a new task..." />
+  <!-- NEW: PRIORITY -->
+  <select id="taskPriority">
+    <option value="High">High</option>
+    <option value="Medium" selected>Medium</option>
+    <option value="Low">Low</option>
+  </select>
+  <!-- NEW: DATE -->
+  <input type="date" id="taskDate" />
+  <button id="addBtn">Add</button>
+  
 </div>
-
+  <!-- TASK LIST -->
 </div>
-
-<!-- HEADER -->
-
-<div class="header">
-
-<div>
-<h1>Daily Overview</h1>
-<p>Wednesday, March 18, 2026</p>
+<!-- Finance Section -->
+<div class="finance-section">
+  <h3 class="finance-title">Finance Tracker</h3>
+  <div class="finance-container">
+    <!-- LEFT SIDE -->
+    <div class="finance-card">
+      <span>TOTAL BALANCE</span>
+      <h2>$12,450.80</h2>
+      <div class="finance-stats">
+        <div class="stat-box">
+          <p>INCOME</p>
+          <h4>+$4,200.00</h4>
+        </div>
+        <div class="stat-box">
+          <p>EXPENSES</p>
+          <h4>-$1,850.00</h4>
+        </div>
+      </div>
+    </div>
+    <!-- RIGHT SIDE -->
+    <div class="finance-form">
+      <h4>Quick Transfer</h4>
+      <input type="text" placeholder="Recipient" />
+      <input type="number" placeholder="Amount" />
+      <button>Send Money</button>
+    </div>
+  </div>
 </div>
-
-<button class="btn">
-+ New Entry
-</button>
-
+      <!-- Score -->
+      <div class="score">
+        <h3>Productivity Score</h3>
+        <div class="circle">
+          <span>82%</span>
+          <p>Excellent</p>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>
-
-<!-- CARDS -->
-
-<div class="cards">
-
-<div class="card">
-<span class="tag green">+12.5%</span>
-<p>TASKS DONE</p>
-<h2>24/30</h2>
+<!-- Overlay Modal -->
+<div id="overlay" class="overlay hidden">
+  <div class="entry-card">
+    <!-- Header -->
+    <div class="entry-header">
+      <div>
+        <h2>Create New Entry</h2>
+        <p>What would you like to add today?</p>
+      </div>
+      <span id="closeBtn" class="close">&times;</span>
+    </div>
+    <!-- Tabs -->
+    <div class="entry-tabs">
+      <button class="tab active" data-type="task">TASK</button>
+      <button class="tab" data-type="finance">FINANCE</button>
+      <button class="tab" data-type="focus">FOCUS</button>
+    </div>
+    <!-- Sections -->
+    <div class="entry-body">
+      <!-- TASK -->
+      <div id="task" class="section active">
+        <label>TASK TITLE</label>
+        <input type="text" placeholder="What needs to be done?" />
+        <label>PRIORITY</label>
+       <div class="priority">
+  <button class="high">High</button>
+  <button class="medium active">Medium</button>
+  <button class="low">Low</button>
 </div>
-
-<div class="card">
-<span class="tag yellow">On Track</span>
-<p>FOCUS TIME</p>
-<h2>4.5 hrs</h2>
+  <label>DUE DATE</label>
+  <input type="date" id="dueDate">
+      </div>
+      <!-- FINANCE -->
+      <div id="finance" class="section">
+        <label>AMOUNT</label>
+        <input type="number" placeholder="Enter amount" />
+        <label>CATEGORY</label>
+        <input type="text" placeholder="Food, Rent..." />
+      </div>
+      <!-- FOCUS -->
+      <div id="focus" class="section">
+        <label>FOCUS TIME</label>
+        <input type="time" />
+        <label>MODE</label>
+        <input type="text" placeholder="Deep work / Study" />
+      </div>
+    </div>
+    <!-- Button -->
+    <button class="save-btn">SAVE ENTRY</button>
+  </div>
 </div>
-
-<div class="card">
-<span class="tag red">-$240.00</span>
-<p>DAILY SPENDING</p>
-<h2>$1,240.50</h2>
-</div>
-
-<div class="card">
-<span class="tag green">+8%</span>
-<p>SAVINGS</p>
-<h2>$8,320</h2>
-</div>
-
-</div>
-
-<!-- WIDGETS -->
-
-<div class="widgets">
-
-<!-- LEFT -->
-
-<div class="widget">
-
-<h2>Task Manager</h2>
-
-<div id="taskList">
-
-<div class="task">✔ Finish UI Dashboard</div>
-<div class="task">✔ Update Finance Section</div>
-<div class="task">⏳ Complete Calendar Module</div>
-
-</div>
-
-<div class="task-input">
-
-<input 
-type="text" 
-id="taskInput"
-placeholder="Add task..."
->
-
-<select id="priority">
-
-<option>High</option>
-<option selected>Medium</option>
-<option>Low</option>
-
-</select>
-
-<button id="addTask">
-Add
-</button>
-
-</div>
-
-</div>
-
-<!-- RIGHT -->
-
-<div class="widget">
-
-<h2>Daily Goals</h2>
-
-<p>Productivity Progress</p>
-
-<div class="progress">
-<div class="progress-bar"></div>
-</div>
-
-<br>
-
-<h2>Weather</h2>
-
-<p>🌤 28°C - Hyderabad</p>
-
-<br>
-
-<h2>Motivation</h2>
-
-<p>
-"Consistency is what transforms average into excellence."
-</p>
-
-</div>
-
-</div>
-
-<!-- EXTRA WIDGETS -->
-
-<div class="widgets">
-
-<div class="widget notes">
-
-<h2>Quick Notes</h2>
-
-<textarea placeholder="Write your thoughts here..."></textarea>
-
-</div>
-
-<div class="widget">
-
-<h2>Finance Tracker</h2>
-
-<br>
-
-<p><strong>Total Balance:</strong> $12,450.80</p>
-<br>
-<p><strong>Income:</strong> +$4,200.00</p>
-<br>
-<p><strong>Expenses:</strong> -$1,850.00</p>
-
-<br>
-
-<button class="btn">
-Transfer Money
-</button>
-
-</div>
-
-</div>
-
-</main>
-
-</div>
-
-<script>
-
-/* LIVE CLOCK */
-
-function updateClock(){
-
-  const now = new Date();
-
-  document.getElementById("clock").innerHTML =
-  now.toLocaleTimeString();
-
-}
-
-setInterval(updateClock,1000);
-
-updateClock();
-
-/* DARK MODE */
-
-const darkBtn = document.getElementById("darkBtn");
-
-darkBtn.addEventListener("click",()=>{
-
-  document.body.classList.toggle("dark-mode");
-
-});
-
-/* TASK ADDER */
-
-const addTask = document.getElementById("addTask");
-
-addTask.addEventListener("click",()=>{
-
-  const taskInput = document.getElementById("taskInput");
-
-  if(taskInput.value.trim() !== ""){
-
-    const div = document.createElement("div");
-
-    div.className = "task";
-
-    div.innerHTML = "✔ " + taskInput.value;
-
-    document.getElementById("taskList").appendChild(div);
-
-    taskInput.value = "";
-
-  }
-
-});
-
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
