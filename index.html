@@ -1,591 +1,198 @@
-<!-- =========================================
-     UPDATED ADVANCED CALENDAR SECTION
-     REPLACE YOUR OLD TASK SECTION WITH THIS
-========================================= -->
-
-<div class="tasks">
-
-  <div class="tasks-header">
-
-    <h3>Smart Calendar</h3>
-
-    <!-- CALENDAR CONTROLS -->
-    <div class="calendar-controls">
-
-      <button id="prevMonth" class="nav-btn">
-        ←
-      </button>
-
-      <h4 id="monthYear"></h4>
-
-      <button id="nextMonth" class="nav-btn">
-        →
-      </button>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SmartLife Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="container">
+  
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">SmartLife</h2>
+    <ul>
+      <li class="active" data-page="dashboard">Dashboard</li>
+      <li data-page="tasks">Tasks</li>
+      <li data-page="finance">Finance</li>
+      <li data-page="focus">Focus</li>
+    </ul>
+    <div class="collapse">Collapse Menu</div>
+  </aside>
+  <!-- Main -->
+  <main class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+      <input type="text" placeholder="Search tasks, finances, or settings..." />
+      <div class="right-section">
+        <div class="notification">
+          🔔
+          <span class="dot"></span>
+        </div>
+        <div class="profile-box">
+          <div class="profile-text">
+            <h4>John Doe</h4>
+            <p>PREMIUM USER</p>
+          </div>
+          <div class="avatar"></div>
+        </div>
+      </div>
     </div>
-
-    <!-- VIEW TOGGLE -->
-    <div class="view-toggle">
-
-      <button
-        class="view-btn active"
-        data-view="list"
-        id="listViewBtn"
-      >
-        <i class="fa-solid fa-list"></i>
-        List
-      </button>
-
-      <button
-        class="view-btn"
-        data-view="calendar"
-        id="calendarViewBtn"
-      >
-        <i class="fa-solid fa-calendar-days"></i>
-        Calendar
-      </button>
-
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <h1>Daily Overview</h1>
+        <p class="date">Wednesday, March 18, 2026</p>
+      </div>
+      <button class="btn">+ New Entry</button>
+      
     </div>
-
-  </div>
-
-  <!-- TODAY TASKS -->
-  <div id="todayTasks" class="today-tasks"></div>
-
-  <!-- TASK LIST -->
-  <div id="taskList"></div>
-
-  <!-- CALENDAR -->
-  <div id="calendarView" class="calendar hidden"></div>
-
-  <!-- ADD TASK -->
-  <div class="add-task">
-
-    <input
-      type="text"
-      id="taskInput"
-      placeholder="Add new task..."
-    />
-
-    <select id="taskPriority">
-
-      <option value="High">
-        High
-      </option>
-
-      <option value="Medium" selected>
-        Medium
-      </option>
-
-      <option value="Low">
-        Low
-      </option>
-
-    </select>
-
-    <input
-      type="date"
-      id="taskDate"
-    />
-
-    <button id="addBtn">
-      Add Task
-    </button>
-
-  </div>
-
+    <!-- Cards -->
+    <div class="cards">
+      <div class="card">
+        <span class="tag green">+12.5%</span>
+        <p>TASKS DONE</p>
+        <h2>24/30</h2>
+      </div>
+      <div class="card">
+        <span class="tag yellow">On Track</span>
+        <p>FOCUS TIME</p>
+        <h2>4.5 hrs</h2>
+      </div>
+      <div class="card">
+        <span class="tag red">-$240.00</span>
+        <p>DAILY SPENDING</p>
+        <h2>$1,240.50</h2>
+      </div>
+    </div>
+    <!-- Bottom -->
+    <div class="bottom">
+      <!-- Tasks -->
+     <div class="tasks">
+   <div class="tasks-header">
+    <h3>Task Manager</h3>
+    <div class="calendar-header">
+  <button id="prevMonth">←</button>
+  <h4 id="monthYear"></h4>
+  <button id="nextMonth">→</button>
+    <button id="Month">←</button>
+      <button id="NextvMonth">←</button>
+  <button id="prevMonth">←</button>
 </div>
-
-<!-- =========================================
-     CALENDAR CSS
-========================================= -->
-
-<style>
-
-.calendar-controls{
-  display:flex;
-  align-items:center;
-  gap:15px;
-}
-
-.nav-btn{
-  width:40px;
-  height:40px;
-  border:none;
-  border-radius:10px;
-  background:#1e293b;
-  color:white;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-.nav-btn:hover{
-  background:#38bdf8;
-  transform:scale(1.05);
-}
-
-.calendar{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:12px;
-  margin-top:25px;
-}
-
-.week-name{
-  text-align:center;
-  font-weight:bold;
-  color:#94a3b8;
-  padding:10px;
-}
-
-.day-box{
-  background:#1e293b;
-  min-height:130px;
-  border-radius:18px;
-  padding:12px;
-  transition:0.3s;
-  position:relative;
-  overflow:hidden;
-}
-
-.day-box:hover{
-  transform:translateY(-3px);
-  background:#263548;
-}
-
-.today{
-  border:2px solid #38bdf8;
-  box-shadow:0 0 20px rgba(56,189,248,0.4);
-}
-
-.day-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-
-.day-number{
-  font-size:18px;
-  font-weight:bold;
-}
-
-.today-label{
-  background:#38bdf8;
-  color:white;
-  padding:3px 8px;
-  border-radius:20px;
-  font-size:10px;
-}
-
-.calendar-tasks{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-
-.task-dot{
-  font-size:12px;
-  padding:6px 8px;
-  border-radius:8px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.task-dot.high{
-  background:#7f1d1d;
-  color:#f87171;
-}
-
-.task-dot.medium{
-  background:#78350f;
-  color:#facc15;
-}
-
-.task-dot.low{
-  background:#14532d;
-  color:#4ade80;
-}
-
-.more-tasks{
-  font-size:11px;
-  color:#94a3b8;
-  margin-top:5px;
-}
-
-.empty-box{
-  background:transparent;
-}
-
-.hidden{
-  display:none;
-}
-
-.today-tasks{
-  margin-bottom:20px;
-}
-
-.today-card{
-  background:#0f172a;
-  padding:15px;
-  border-radius:15px;
-  margin-bottom:10px;
-  border-left:5px solid #38bdf8;
-}
-
-@media(max-width:900px){
-
-  .calendar{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-}
-
-@media(max-width:600px){
-
-  .calendar{
-    grid-template-columns:1fr;
-  }
-
-}
-
-</style>
-
-<!-- =========================================
-     ADVANCED CALENDAR SCRIPT
-========================================= -->
-
-<script>
-
-let currentDate = new Date();
-
-const calendarView =
-  document.getElementById("calendarView");
-
-const monthYear =
-  document.getElementById("monthYear");
-
-const prevMonth =
-  document.getElementById("prevMonth");
-
-const nextMonth =
-  document.getElementById("nextMonth");
-
-const listViewBtn =
-  document.getElementById("listViewBtn");
-
-const calendarViewBtn =
-  document.getElementById("calendarViewBtn");
-
-const taskList =
-  document.getElementById("taskList");
-
-const todayTasks =
-  document.getElementById("todayTasks");
-
-/* =========================================
-   VIEW TOGGLE
-========================================= */
-
-listViewBtn.addEventListener("click",()=>{
-
-  taskList.classList.remove("hidden");
-
-  calendarView.classList.add("hidden");
-
-  listViewBtn.classList.add("active");
-
-  calendarViewBtn.classList.remove("active");
-
-});
-
-calendarViewBtn.addEventListener("click",()=>{
-
-  taskList.classList.add("hidden");
-
-  calendarView.classList.remove("hidden");
-
-  calendarViewBtn.classList.add("active");
-
-  listViewBtn.classList.remove("active");
-
-  renderCalendar();
-
-});
-
-/* =========================================
-   MONTH NAVIGATION
-========================================= */
-
-prevMonth.addEventListener("click",()=>{
-
-  currentDate.setMonth(
-    currentDate.getMonth() - 1
-  );
-
-  renderCalendar();
-
-});
-
-nextMonth.addEventListener("click",()=>{
-
-  currentDate.setMonth(
-    currentDate.getMonth() + 1
-  );
-
-  renderCalendar();
-
-});
-
-/* =========================================
-   RENDER CALENDAR
-========================================= */
-
-function renderCalendar(){
-
-  calendarView.innerHTML = "";
-
-  const year =
-    currentDate.getFullYear();
-
-  const month =
-    currentDate.getMonth();
-
-  const firstDay =
-    new Date(year,month,1).getDay();
-
-  const daysInMonth =
-    new Date(year,month + 1,0).getDate();
-
-  const today =
-    new Date();
-
-  const monthNames = [
-
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-
-  ];
-
-  monthYear.innerText =
-    `${monthNames[month]} ${year}`;
-
-  const weekDays = [
-
-    "SUN",
-    "MON",
-    "TUE",
-    "WED",
-    "THU",
-    "FRI",
-    "SAT"
-
-  ];
-
-  weekDays.forEach(day=>{
-
-    calendarView.innerHTML += `
-      <div class="week-name">
-        ${day}
-      </div>
-    `;
-
-  });
-
-  /* EMPTY BOXES */
-
-  for(let i=0;i<firstDay;i++){
-
-    calendarView.innerHTML += `
-      <div class="empty-box"></div>
-    `;
-
-  }
-
-  /* DAYS */
-
-  for(let date=1;date<=daysInMonth;date++){
-
-    const isToday =
-
-      date === today.getDate() &&
-      month === today.getMonth() &&
-      year === today.getFullYear();
-
-    /* GET TASKS */
-
-    const tasksForDay =
-      AppState.tasks.filter(task=>{
-
-        if(
-          !task.date ||
-          task.date === "No Date"
-        ){
-          return false;
-        }
-
-        const d =
-          new Date(task.date);
-
-        return (
-
-          d.getDate() === date &&
-          d.getMonth() === month &&
-          d.getFullYear() === year
-
-        );
-
-      });
-
-    let taskHTML = "";
-
-    tasksForDay.slice(0,2).forEach(task=>{
-
-      taskHTML += `
-
-        <div class="task-dot ${task.priority.toLowerCase()}">
-
-          ${task.title}
-
+ <div class="view-toggle">
+  <button class="view-btn active" data-view="list">List</button>
+  <button class="view-btn" data-view="calendar">Calendar</button>
+</div>
+    </div>
+    <div id="todayTasks" class="today-tasks"></div>
+    <div id="taskList"></div>
+<div id="calendarView" class="calendar hidden"></div>
+    <!-- ADD TASK INPUT -->
+    <div class="add-task">
+  <input type="text" id="taskInput" placeholder="Add a new task..." />
+  <!-- NEW: PRIORITY -->
+  <select id="taskPriority">
+    <option value="High">High</option>
+    <option value="Medium" selected>Medium</option>
+    <option value="Low">Low</option>
+  </select>
+  <!-- NEW: DATE -->
+  <input type="date" id="taskDate" />
+  <button id="addBtn">Add</button>
+  
+</div>
+  <!-- TASK LIST -->
+</div>
+<!-- Finance Section -->
+<div class="finance-section">
+  <h3 class="finance-title">Finance Tracker</h3>
+  <div class="finance-container">
+    <!-- LEFT SIDE -->
+    <div class="finance-card">
+      <span>TOTAL BALANCE</span>
+      <h2>$12,450.80</h2>
+      <div class="finance-stats">
+        <div class="stat-box">
+          <p>INCOME</p>
+          <h4>+$4,200.00</h4>
         </div>
-
-      `;
-
-    });
-
-    if(tasksForDay.length > 2){
-
-      taskHTML += `
-
-        <div class="more-tasks">
-
-          +${tasksForDay.length - 2} more
-
+        <div class="stat-box">
+          <p>EXPENSES</p>
+          <h4>-$1,850.00</h4>
         </div>
-
-      `;
-    }
-
-    calendarView.innerHTML += `
-
-      <div class="day-box ${isToday ? "today" : ""}">
-
-        <div class="day-top">
-
-          <span class="day-number">
-            ${date}
-          </span>
-
-          ${
-            isToday
-            ?
-            `<span class="today-label">Today</span>`
-            :
-            ""
-          }
-
+      </div>
+    </div>
+    <!-- RIGHT SIDE -->
+    <div class="finance-form">
+      <h4>Quick Transfer</h4>
+      <input type="text" placeholder="Recipient" />
+      <input type="number" placeholder="Amount" />
+      <button>Send Money</button>
+    </div>
+  </div>
+</div>
+      <!-- Score -->
+      <div class="score">
+        <h3>Productivity Score</h3>
+        <div class="circle">
+          <span>82%</span>
+          <p>Excellent</p>
         </div>
-
-        <div class="calendar-tasks">
-
-          ${taskHTML}
-
-        </div>
-
       </div>
-
-    `;
-  }
-
-}
-
-/* =========================================
-   TODAY TASKS
-========================================= */
-
-function renderTodayTasks(){
-
-  const today =
-    new Date();
-
-  todayTasks.innerHTML = "";
-
-  const tasks =
-    AppState.tasks.filter(task=>{
-
-      if(
-        !task.date ||
-        task.date === "No Date"
-      ){
-        return false;
-      }
-
-      const d =
-        new Date(task.date);
-
-      return (
-
-        d.getDate() === today.getDate() &&
-        d.getMonth() === today.getMonth() &&
-        d.getFullYear() === today.getFullYear()
-
-      );
-
-    });
-
-  if(tasks.length === 0){
-
-    todayTasks.innerHTML = `
-
-      <div class="today-card">
-
-        No tasks scheduled for today 🚀
-
+    </div>
+  </main>
+</div>
+<!-- Overlay Modal -->
+<div id="overlay" class="overlay hidden">
+  <div class="entry-card">
+    <!-- Header -->
+    <div class="entry-header">
+      <div>
+        <h2>Create New Entry</h2>
+        <p>What would you like to add today?</p>
       </div>
-
-    `;
-
-    return;
-  }
-
-  tasks.forEach(task=>{
-
-    todayTasks.innerHTML += `
-
-      <div class="today-card">
-
-        <strong>${task.title}</strong>
-
-        <br>
-
-        Priority:
-        ${task.priority}
-
+      <span id="closeBtn" class="close">&times;</span>
+    </div>
+    <!-- Tabs -->
+    <div class="entry-tabs">
+      <button class="tab active" data-type="task">TASK</button>
+      <button class="tab" data-type="finance">FINANCE</button>
+      <button class="tab" data-type="focus">FOCUS</button>
+    </div>
+    <!-- Sections -->
+    <div class="entry-body">
+      <!-- TASK -->
+      <div id="task" class="section active">
+        <label>TASK TITLE</label>
+        <input type="text" placeholder="What needs to be done?" />
+        <label>PRIORITY</label>
+       <div class="priority">
+  <button class="high">High</button>
+  <button class="medium active">Medium</button>
+  <button class="low">Low</button>
+</div>
+  <label>DUE DATE</label>
+  <input type="date" id="dueDate">
       </div>
-
-    `;
-
-  });
-
-}
-
-/* =========================================
-   AUTO LOAD
-========================================= */
-
-renderCalendar();
-
-renderTodayTasks();
-
-</script>
+      <!-- FINANCE -->
+      <div id="finance" class="section">
+        <label>AMOUNT</label>
+        <input type="number" placeholder="Enter amount" />
+        <label>CATEGORY</label>
+        <input type="text" placeholder="Food, Rent..." />
+      </div>
+      <!-- FOCUS -->
+      <div id="focus" class="section">
+        <label>FOCUS TIME</label>
+        <input type="time" />
+        <label>MODE</label>
+        <input type="text" placeholder="Deep work / Study" />
+      </div>
+    </div>
+    <!-- Button -->
+    <button class="save-btn">SAVE ENTRY</button>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

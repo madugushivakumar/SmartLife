@@ -1,278 +1,177 @@
 "use strict";
 
 /* =========================================
-   ADVANCED PRODUCTIVITY DASHBOARD
-   FULL UPDATED VERSION
+   ADVANCED PRODUCTIVITY DASHBOARD PRO
 ========================================= */
 
 /* =========================================
-   APP STATE
+   GLOBAL APP STATE
 ========================================= */
 const AppState = {
-  tasks: [],
-  finance: [],
-  focus: [],
-  darkMode: false
+  tasks: JSON.parse(localStorage.getItem("tasks")) || [],
+  finance: JSON.parse(localStorage.getItem("finance")) || [],
+  focus: JSON.parse(localStorage.getItem("focus")) || [],
+  darkMode: JSON.parse(localStorage.getItem("darkMode")) || false,
+  productivityScore: 0,
+  streak: 0
 };
 
 let currentFilter = "all";
-let currentDate = new Date();
 let currentView = "list";
+let currentDate = new Date();
+let draggedTask = null;
 
 /* =========================================
-   ELEMENTS
+   DOM ELEMENTS
 ========================================= */
 const body = document.body;
-
-const newEntryBtn = document.querySelector(".btn");
-const overlay = document.getElementById("overlay");
-const closeBtn = document.getElementById("closeBtn");
-const saveBtn = document.querySelector(".save-btn");
-
-const addBtn = document.getElementById("addBtn");
-const input = document.getElementById("taskInput");
-const priorityInput = document.getElementById("taskPriority");
-const dateInput = document.getElementById("taskDate");
-
 const taskList = document.getElementById("taskList");
 const calendarView = document.getElementById("calendarView");
+const statsContainer = document.getElementById("statsContainer");
+const searchInput = document.getElementById("searchTask");
+const darkModeBtn = document.getElementById("darkModeBtn");
 
-const listBtn = document.querySelector('[data-view="list"]');
-const calBtn = document.querySelector('[data-view="calendar"]');
+const addBtn = document.getElementById("addBtn");
+const taskInput = document.getElementById("taskInput");
+const priorityInput = document.getElementById("taskPriority");
+const dateInput = document.getElementById("taskDate");
 
 const monthYear = document.getElementById("monthYear");
 const prevMonth = document.getElementById("prevMonth");
 const nextMonth = document.getElementById("nextMonth");
 
-const menuItems = document.querySelectorAll(".sidebar li");
-
-const searchInput = document.getElementById("searchTask");
-const statsContainer = document.getElementById("statsContainer");
-const darkModeBtn = document.getElementById("darkModeBtn");
-
 /* =========================================
-   MODAL
+   TASK CREATION
 ========================================= */
-newEntryBtn?.addEventListener("click", () => {
-  overlay?.classList.remove("hidden");
-});
+addBtn?.addEventListener("click", createTask);
 
-closeBtn?.addEventListener("click", () => {
-  overlay?.classList.add("hidden");
-});
+function createTask() {
 
-/* =========================================
-   TAB SWITCH
-========================================= */
-document.querySelectorAll(".tab").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelector(".tab.active")
-      ?.classList.remove("active");
+  const title = taskInput.value.trim();
+  const priority = priorityInput.value;
+  const dueDate = dateInput.value;
 
-    btn.classList.add("active");
-
-    document.querySelector(".section.active")
-      ?.classList.remove("active");
-
-    document.getElementById(btn.dataset.type)
-      ?.classList.add("active");
-  });
-});
-
-/* =========================================
-   SAVE ENTRY
-========================================= */
-saveBtn?.addEventListener("click", () => {
-
-  const type =
-    document.querySelector(".tab.active")
-      ?.dataset.type;
-
-  if (type === "task") saveTask();
-  if (type === "finance") saveFinance();
-  if (type === "focus") saveFocus();
-
-  overlay?.classList.add("hidden");
-});
-
-/* =========================================
-   SAVE TASK
-========================================= */
-function saveTask() {
-
-  const titleInput =
-    document.querySelector("#task input");
-
-  const title = titleInput?.value.trim();
-
-  const priority =
-    document.querySelector(".priority button.active")
-      ?.innerText || "Medium";
-
-  const duedate =
-    document.getElementById("dueDate")?.value || "No date";
-
-  if (!title) return;
-
-  AppState.tasks.push({
-    id: Date.now(),
-    title,
-    priority,
-    duedate,
-    completed: false,
-    createdAt: new Date().toISOString()
-  });
-
-  if (titleInput) titleInput.value = "";
-
-  saveToLocal();
-  showTasks();
-  renderCalendar();
-  updateStats();
-}
-
-/* =========================================
-   QUICK ADD TASK BAR
-========================================= */
-if (input) input.style.display = "none";
-if (priorityInput) priorityInput.style.display = "none";
-if (dateInput) dateInput.style.display = "none";
-
-addBtn?.addEventListener("click", () => {
-
-  if (input.style.display === "none") {
-
-    input.style.display = "block";
-    priorityInput.style.display = "block";
-    dateInput.style.display = "block";
-
-    input.focus();
+  if (!title) {
+    showToast("Please enter task");
     return;
   }
 
-  const title = input.value.trim();
-  const priority = priorityInput.value;
-  const duedate = dateInput.value || "No date";
-
-  if (!title) return;
-
-  AppState.tasks.push({
+  const task = {
     id: Date.now(),
     title,
     priority,
-    duedate,
+    dueDate,
     completed: false,
+    progress: 0,
+    tags: [],
+    category: "General",
     createdAt: new Date().toISOString()
-  });
+  };
 
-  input.value = "";
+  AppState.tasks.push(task);
+
+  taskInput.value = "";
   dateInput.value = "";
 
-  input.style.display = "none";
-  priorityInput.style.display = "none";
-  dateInput.style.display = "none";
-
-  saveToLocal();
-  showTasks();
+  saveAll();
+  renderTasks();
   renderCalendar();
   updateStats();
 
-  showToast("Task Added Successfully ✅");
-});
+  showToast("Task Added ✅");
+
+  notifyIfNeeded(task);
+}
 
 /* =========================================
-   SEARCH TASKS
+   RENDER TASKS
 ========================================= */
-searchInput?.addEventListener("input", () => {
-  showTasks(searchInput.value);
-});
-
-/* =========================================
-   SHOW TASKS
-========================================= */
-function showTasks(search = "") {
+function renderTasks(search = "") {
 
   if (!taskList) return;
 
   taskList.innerHTML = "";
 
-  let filteredTasks = [...AppState.tasks];
+  let tasks = [...AppState.tasks];
 
-  /* FILTERS */
   if (currentFilter === "completed") {
-    filteredTasks =
-      filteredTasks.filter(t => t.completed);
+    tasks = tasks.filter(t => t.completed);
   }
 
   if (currentFilter === "pending") {
-    filteredTasks =
-      filteredTasks.filter(t => !t.completed);
+    tasks = tasks.filter(t => !t.completed);
   }
 
-  /* SEARCH */
-  if (search.trim() !== "") {
-    filteredTasks = filteredTasks.filter(task =>
-      task.title
-        .toLowerCase()
-        .includes(search.toLowerCase())
+  if (search) {
+    tasks = tasks.filter(task =>
+      task.title.toLowerCase()
+      .includes(search.toLowerCase())
     );
   }
 
-  /* SORT BY DATE */
-  filteredTasks.sort((a, b) => {
-    return new Date(a.createdAt) -
-      new Date(b.createdAt);
-  });
+  tasks.sort((a, b) =>
+    new Date(b.createdAt) - new Date(a.createdAt)
+  );
 
-  if (filteredTasks.length === 0) {
-
+  if (!tasks.length) {
     taskList.innerHTML = `
-      <p class="empty">
-        No tasks found 😴
-      </p>
+      <div class="empty">
+        No Tasks Found 😴
+      </div>
     `;
-
     return;
   }
 
-  filteredTasks.forEach(task => {
+  tasks.forEach(task => {
 
-    const realIndex =
-      AppState.tasks.findIndex(t => t.id === task.id);
-
-    const colorClass =
+    const priorityClass =
       task.priority.toLowerCase();
 
     taskList.innerHTML += `
-      <div class="task-card ${task.completed ? "done" : ""}">
-        
-        <input type="checkbox"
-          ${task.completed ? "checked" : ""}
-          onchange="toggleTask(${realIndex})"
-        />
+      <div class="task-card ${task.completed ? "done" : ""}"
+           draggable="true"
+           ondragstart="dragStart(${task.id})"
+           ondragover="dragOver(event)"
+           ondrop="dropTask(${task.id})">
 
-        <div class="task-content">
+        <div class="task-top">
 
-          <p>${task.title}</p>
+          <input type="checkbox"
+                 ${task.completed ? "checked" : ""}
+                 onchange="toggleTask(${task.id})">
 
-          <span class="priority-tag ${colorClass}">
-            ${task.priority}
-          </span>
+          <div class="task-content">
 
-          <small>
-            📅 ${task.duedate}
-          </small>
+            <h3>${task.title}</h3>
 
+            <span class="priority ${priorityClass}">
+              ${task.priority}
+            </span>
+
+            <small>📅 ${task.dueDate || "No Date"}</small>
+
+          </div>
+
+        </div>
+
+        <div class="progress-wrapper">
+          <div class="progress-bar"
+               style="width:${task.progress}%">
+          </div>
         </div>
 
         <div class="task-actions">
 
-          <button onclick="editTask(${realIndex})">
-            ✏
+          <button onclick="increaseProgress(${task.id})">
+            📈
           </button>
 
-          <button onclick="deleteTask(${realIndex})">
-            🗑
+          <button onclick="editTask(${task.id})">
+            ✏️
+          </button>
+
+          <button onclick="deleteTask(${task.id})">
+            🗑️
           </button>
 
         </div>
@@ -283,61 +182,114 @@ function showTasks(search = "") {
 }
 
 /* =========================================
-   TOGGLE TASK
+   TASK ACTIONS
 ========================================= */
-function toggleTask(index) {
+function toggleTask(id) {
 
-  AppState.tasks[index].completed =
-    !AppState.tasks[index].completed;
+  const task =
+    AppState.tasks.find(t => t.id === id);
 
-  saveToLocal();
-  showTasks();
+  task.completed = !task.completed;
+
+  if (task.completed) {
+    AppState.productivityScore += 10;
+  }
+
+  saveAll();
+  renderTasks();
   renderCalendar();
   updateStats();
 
   showToast("Task Updated 🚀");
 }
 
-/* =========================================
-   DELETE TASK
-========================================= */
-function deleteTask(index) {
+function deleteTask(id) {
 
-  if (!confirm("Delete this task?")) return;
+  AppState.tasks =
+    AppState.tasks.filter(t => t.id !== id);
 
-  AppState.tasks.splice(index, 1);
-
-  saveToLocal();
-  showTasks();
+  saveAll();
+  renderTasks();
   renderCalendar();
   updateStats();
 
-  showToast("Task Deleted 🗑");
+  showToast("Task Deleted 🗑️");
 }
 
-/* =========================================
-   EDIT TASK
-========================================= */
-function editTask(index) {
+function editTask(id) {
 
-  const task = AppState.tasks[index];
+  const task =
+    AppState.tasks.find(t => t.id === id);
 
   const newTitle =
-    prompt("Edit task", task.title);
+    prompt("Edit Task", task.title);
 
   if (!newTitle) return;
 
   task.title = newTitle;
 
-  saveToLocal();
-  showTasks();
-  renderCalendar();
+  saveAll();
+  renderTasks();
 
-  showToast("Task Edited ✏");
+  showToast("Task Edited ✏️");
+}
+
+function increaseProgress(id) {
+
+  const task =
+    AppState.tasks.find(t => t.id === id);
+
+  task.progress += 10;
+
+  if (task.progress > 100) {
+    task.progress = 100;
+  }
+
+  saveAll();
+  renderTasks();
+
+  showToast("Progress Updated 📈");
 }
 
 /* =========================================
-   CALENDAR RENDER
+   DRAG & DROP
+========================================= */
+function dragStart(id) {
+  draggedTask = id;
+}
+
+function dragOver(e) {
+  e.preventDefault();
+}
+
+function dropTask(id) {
+
+  const draggedIndex =
+    AppState.tasks.findIndex(t => t.id === draggedTask);
+
+  const targetIndex =
+    AppState.tasks.findIndex(t => t.id === id);
+
+  const draggedItem =
+    AppState.tasks.splice(draggedIndex, 1)[0];
+
+  AppState.tasks.splice(targetIndex, 0, draggedItem);
+
+  saveAll();
+  renderTasks();
+
+  showToast("Tasks Reordered 🔄");
+}
+
+/* =========================================
+   SEARCH
+========================================= */
+searchInput?.addEventListener("input", e => {
+  renderTasks(e.target.value);
+});
+
+/* =========================================
+   CALENDAR
 ========================================= */
 function renderCalendar() {
 
@@ -348,111 +300,52 @@ function renderCalendar() {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
+  const days =
+    new Date(year, month + 1, 0).getDate();
+
   const firstDay =
     new Date(year, month, 1).getDay();
 
-  const daysInMonth =
-    new Date(year, month + 1, 0).getDate();
-
-  const today = new Date();
-
   const monthNames = [
-    "January", "February", "March",
-    "April", "May", "June",
-    "July", "August", "September",
-    "October", "November", "December"
+    "January","February","March","April",
+    "May","June","July","August",
+    "September","October","November","December"
   ];
 
-  if (monthYear) {
-    monthYear.innerText =
-      `${monthNames[month]} ${year}`;
-  }
-
-  const weekDays = [
-    "SUN", "MON", "TUE",
-    "WED", "THU", "FRI", "SAT"
-  ];
-
-  weekDays.forEach(day => {
-
-    calendarView.innerHTML += `
-      <div class="week-name">
-        ${day}
-      </div>
-    `;
-  });
+  monthYear.innerText =
+    `${monthNames[month]} ${year}`;
 
   for (let i = 0; i < firstDay; i++) {
-
-    calendarView.innerHTML += `
-      <div class="empty-box"></div>
-    `;
+    calendarView.innerHTML +=
+      `<div class="empty-box"></div>`;
   }
 
-  for (let date = 1; date <= daysInMonth; date++) {
+  for (let d = 1; d <= days; d++) {
 
-    const isToday =
-      date === today.getDate() &&
-      month === today.getMonth() &&
-      year === today.getFullYear();
-
-    const tasksForDay =
+    const tasks =
       AppState.tasks.filter(task => {
 
-        if (
-          !task.duedate ||
-          task.duedate === "No date"
-        ) {
-          return false;
-        }
+        if (!task.dueDate) return false;
 
-        const d = new Date(task.duedate);
+        const taskDate = new Date(task.dueDate);
 
         return (
-          d.getDate() === date &&
-          d.getMonth() === month &&
-          d.getFullYear() === year
+          taskDate.getDate() === d &&
+          taskDate.getMonth() === month &&
+          taskDate.getFullYear() === year
         );
       });
 
-    let taskHTML = "";
-
-    tasksForDay.slice(0, 2).forEach(task => {
-
-      taskHTML += `
-        <div class="task-dot ${task.priority.toLowerCase()}">
-          • ${task.title}
-        </div>
-      `;
-    });
-
-    if (tasksForDay.length > 2) {
-
-      taskHTML += `
-        <div class="more-tasks">
-          +${tasksForDay.length - 2} more
-        </div>
-      `;
-    }
-
     calendarView.innerHTML += `
-      <div class="day-box ${isToday ? "today" : ""}">
-        
-        <div class="day-top">
+      <div class="day-box">
 
-          <span class="day-number">
-            ${date}
-          </span>
+        <div class="day-number">${d}</div>
 
-          ${isToday
-            ? `<span class="today-label">Today</span>`
-            : ""}
-
-        </div>
-
-        <div class="calendar-tasks">
-          ${taskHTML}
-        </div>
+        ${tasks.map(task => `
+          <div class="calendar-task ${task.priority.toLowerCase()}">
+            ${task.title}
+          </div>
+        `).join("")}
 
       </div>
     `;
@@ -460,143 +353,55 @@ function renderCalendar() {
 }
 
 /* =========================================
-   FILTER BUTTONS
-========================================= */
-document.querySelectorAll(".filter").forEach(btn => {
-
-  btn.addEventListener("click", () => {
-
-    document.querySelector(".filter.active")
-      ?.classList.remove("active");
-
-    btn.classList.add("active");
-
-    currentFilter =
-      btn.dataset.filter;
-
-    showTasks();
-  });
-});
-
-/* =========================================
-   VIEW TOGGLE
-========================================= */
-listBtn?.addEventListener("click", () => {
-
-  currentView = "list";
-
-  document.querySelectorAll(".view-btn")
-    .forEach(btn => {
-      btn.classList.remove("active");
-    });
-
-  listBtn.classList.add("active");
-
-  if (taskList)
-    taskList.style.display = "block";
-
-  if (calendarView)
-    calendarView.style.display = "none";
-
-  showTasks();
-});
-
-calBtn?.addEventListener("click", () => {
-
-  currentView = "calendar";
-
-  document.querySelectorAll(".view-btn")
-    .forEach(btn => {
-      btn.classList.remove("active");
-    });
-
-  calBtn.classList.add("active");
-
-  if (taskList)
-    taskList.style.display = "none";
-
-  if (calendarView)
-    calendarView.style.display = "grid";
-
-  renderCalendar();
-});
-
-/* =========================================
    MONTH NAVIGATION
 ========================================= */
 prevMonth?.addEventListener("click", () => {
-
-  currentDate.setMonth(
-    currentDate.getMonth() - 1
-  );
-
+  currentDate.setMonth(currentDate.getMonth() - 1);
   renderCalendar();
 });
 
 nextMonth?.addEventListener("click", () => {
-
-  currentDate.setMonth(
-    currentDate.getMonth() + 1
-  );
-
+  currentDate.setMonth(currentDate.getMonth() + 1);
   renderCalendar();
 });
 
 /* =========================================
-   SIDEBAR NAVIGATION
-========================================= */
-menuItems.forEach(item => {
-
-  item.addEventListener("click", () => {
-
-    document.querySelector(".sidebar li.active")
-      ?.classList.remove("active");
-
-    item.classList.add("active");
-
-    const page = item.dataset.page;
-
-    document.querySelectorAll(".page")
-      .forEach(section => {
-        section.style.display = "none";
-      });
-
-    document.getElementById(page)
-      ?.style.setProperty("display", "block");
-  });
-});
-
-/* =========================================
-   STATS
+   STATS & ANALYTICS
 ========================================= */
 function updateStats() {
 
-  if (!statsContainer) return;
-
-  const total =
-    AppState.tasks.length;
+  const total = AppState.tasks.length;
 
   const completed =
     AppState.tasks.filter(t => t.completed).length;
 
-  const pending =
-    total - completed;
+  const pending = total - completed;
+
+  const productivity =
+    total === 0 ? 0 :
+    Math.round((completed / total) * 100);
+
+  AppState.productivityScore = productivity;
 
   statsContainer.innerHTML = `
-  
     <div class="stat-card">
-      <h3>${total}</h3>
+      <h2>${total}</h2>
       <p>Total Tasks</p>
     </div>
 
     <div class="stat-card">
-      <h3>${completed}</h3>
+      <h2>${completed}</h2>
       <p>Completed</p>
     </div>
 
     <div class="stat-card">
-      <h3>${pending}</h3>
+      <h2>${pending}</h2>
       <p>Pending</p>
+    </div>
+
+    <div class="stat-card">
+      <h2>${productivity}%</h2>
+      <p>Productivity</p>
     </div>
   `;
 }
@@ -606,8 +411,7 @@ function updateStats() {
 ========================================= */
 darkModeBtn?.addEventListener("click", () => {
 
-  AppState.darkMode =
-    !AppState.darkMode;
+  AppState.darkMode = !AppState.darkMode;
 
   body.classList.toggle("dark");
 
@@ -619,21 +423,142 @@ darkModeBtn?.addEventListener("click", () => {
 
 function loadDarkMode() {
 
-  const dark =
-    JSON.parse(
-      localStorage.getItem("darkMode")
-    );
-
-  if (dark) {
-
-    AppState.darkMode = true;
-
+  if (AppState.darkMode) {
     body.classList.add("dark");
   }
 }
 
 /* =========================================
-   TOAST NOTIFICATION
+   POMODORO TIMER
+========================================= */
+let pomodoroTime = 25 * 60;
+let pomodoroInterval = null;
+
+function startPomodoro() {
+
+  clearInterval(pomodoroInterval);
+
+  pomodoroInterval = setInterval(() => {
+
+    pomodoroTime--;
+
+    const minutes =
+      Math.floor(pomodoroTime / 60);
+
+    const seconds =
+      pomodoroTime % 60;
+
+    console.log(
+      `${minutes}:${seconds}`
+    );
+
+    if (pomodoroTime <= 0) {
+
+      clearInterval(pomodoroInterval);
+
+      showToast("Pomodoro Complete 🍅");
+
+      pomodoroTime = 25 * 60;
+    }
+
+  }, 1000);
+}
+
+/* =========================================
+   NOTIFICATIONS
+========================================= */
+function notifyIfNeeded(task) {
+
+  if (!("Notification" in window)) return;
+
+  Notification.requestPermission()
+    .then(permission => {
+
+      if (permission === "granted") {
+
+        new Notification(
+          "Task Created",
+          {
+            body: task.title
+          }
+        );
+      }
+    });
+}
+
+/* =========================================
+   EXPORT / IMPORT
+========================================= */
+function exportTasks() {
+
+  const data =
+    JSON.stringify(AppState.tasks);
+
+  const blob =
+    new Blob([data], {
+      type: "application/json"
+    });
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const a =
+    document.createElement("a");
+
+  a.href = url;
+  a.download = "tasks.json";
+  a.click();
+
+  showToast("Tasks Exported 📦");
+}
+
+function importTasks(event) {
+
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = e => {
+
+    AppState.tasks =
+      JSON.parse(e.target.result);
+
+    saveAll();
+    renderTasks();
+    renderCalendar();
+    updateStats();
+
+    showToast("Tasks Imported ✅");
+  };
+
+  reader.readAsText(file);
+}
+
+/* =========================================
+   LOCAL STORAGE
+========================================= */
+function saveAll() {
+
+  localStorage.setItem(
+    "tasks",
+    JSON.stringify(AppState.tasks)
+  );
+
+  localStorage.setItem(
+    "finance",
+    JSON.stringify(AppState.finance)
+  );
+
+  localStorage.setItem(
+    "focus",
+    JSON.stringify(AppState.focus)
+  );
+}
+
+/* =========================================
+   TOAST
 ========================================= */
 function showToast(message) {
 
@@ -641,7 +566,6 @@ function showToast(message) {
     document.createElement("div");
 
   toast.className = "toast";
-
   toast.innerText = message;
 
   document.body.appendChild(toast);
@@ -662,103 +586,30 @@ function showToast(message) {
 }
 
 /* =========================================
-   LOCAL STORAGE
-========================================= */
-function loadFromLocal() {
-
-  const data =
-    localStorage.getItem("tasks");
-
-  if (data) {
-
-    AppState.tasks =
-      JSON.parse(data);
-  }
-}
-
-function saveToLocal() {
-
-  localStorage.setItem(
-    "tasks",
-    JSON.stringify(AppState.tasks)
-  );
-}
-
-/* =========================================
-   FINANCE MODULE
-========================================= */
-function saveFinance() {
-
-  const amount =
-    document.getElementById("financeAmount")
-      ?.value;
-
-  const title =
-    document.getElementById("financeTitle")
-      ?.value;
-
-  if (!amount || !title) return;
-
-  AppState.finance.push({
-    title,
-    amount
-  });
-
-  showToast("Finance Saved 💰");
-}
-
-/* =========================================
-   FOCUS MODULE
-========================================= */
-function saveFocus() {
-
-  const focusInput =
-    document.getElementById("focusInput");
-
-  if (!focusInput?.value) return;
-
-  AppState.focus.push({
-    text: focusInput.value
-  });
-
-  focusInput.value = "";
-
-  showToast("Focus Goal Saved 🎯");
-}
-
-/* =========================================
    KEYBOARD SHORTCUTS
 ========================================= */
 document.addEventListener("keydown", e => {
 
   if (e.key === "/") {
-
     e.preventDefault();
-
-    searchInput?.focus();
+    searchInput.focus();
   }
 
-  if (
-    e.ctrlKey &&
-    e.key === "n"
-  ) {
-
+  if (e.ctrlKey && e.key === "n") {
     e.preventDefault();
-
-    overlay?.classList.remove("hidden");
+    taskInput.focus();
   }
 });
 
 /* =========================================
    INIT
 ========================================= */
-loadFromLocal();
 loadDarkMode();
 
-showTasks();
+renderTasks();
 renderCalendar();
 updateStats();
 
 console.log(
-  "🚀 Productivity Dashboard Loaded"
+  "🚀 Productivity Dashboard PRO Loaded"
 );
