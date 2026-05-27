@@ -1,19 +1,32 @@
 "use strict";
 
 /* =========================================
-   ADVANCED PRODUCTIVITY DASHBOARD PRO
+   ADVANCED PRODUCTIVITY DASHBOARD ULTRA PRO
 ========================================= */
+
+/* =========================================
+   SAFE LOCAL STORAGE HELPERS
+========================================= */
+function loadStorage(key, fallback) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || fallback;
+  } catch (error) {
+    console.error(`Storage Error (${key})`, error);
+    return fallback;
+  }
+}
 
 /* =========================================
    GLOBAL APP STATE
 ========================================= */
 const AppState = {
-  tasks: JSON.parse(localStorage.getItem("tasks")) || [],
-  finance: JSON.parse(localStorage.getItem("finance")) || [],
-  focus: JSON.parse(localStorage.getItem("focus")) || [],
-  darkMode: JSON.parse(localStorage.getItem("darkMode")) || false,
+  tasks: loadStorage("tasks", []),
+  finance: loadStorage("finance", []),
+  focus: loadStorage("focus", []),
+  darkMode: loadStorage("darkMode", false),
   productivityScore: 0,
-  streak: 0
+  streak: loadStorage("streak", 0),
+  lastCompletedDate: loadStorage("lastCompletedDate", null)
 };
 
 let currentFilter = "all";
@@ -25,9 +38,11 @@ let draggedTask = null;
    DOM ELEMENTS
 ========================================= */
 const body = document.body;
+
 const taskList = document.getElementById("taskList");
 const calendarView = document.getElementById("calendarView");
 const statsContainer = document.getElementById("statsContainer");
+
 const searchInput = document.getElementById("searchTask");
 const darkModeBtn = document.getElementById("darkModeBtn");
 
@@ -48,11 +63,20 @@ addBtn?.addEventListener("click", createTask);
 function createTask() {
 
   const title = taskInput.value.trim();
-  const priority = priorityInput.value;
+  const priority = priorityInput.value || "Medium";
   const dueDate = dateInput.value;
 
   if (!title) {
-    showToast("Please enter task");
+    showToast("Please enter a task");
+    return;
+  }
+
+  const duplicate = AppState.tasks.some(
+    task => task.title.toLowerCase() === title.toLowerCase()
+  );
+
+  if (duplicate) {
+    showToast("Task already exists ⚠️");
     return;
   }
 
@@ -74,6 +98,7 @@ function createTask() {
   dateInput.value = "";
 
   saveAll();
+
   renderTasks();
   renderCalendar();
   updateStats();
@@ -95,11 +120,11 @@ function renderTasks(search = "") {
   let tasks = [...AppState.tasks];
 
   if (currentFilter === "completed") {
-    tasks = tasks.filter(t => t.completed);
+    tasks = tasks.filter(task => task.completed);
   }
 
   if (currentFilter === "pending") {
-    tasks = tasks.filter(t => !t.completed);
+    tasks = tasks.filter(task => !task.completed);
   }
 
   if (search) {
@@ -109,9 +134,14 @@ function renderTasks(search = "") {
     );
   }
 
-  tasks.sort((a, b) =>
-    new Date(b.createdAt) - new Date(a.createdAt)
-  );
+  tasks.sort((a, b) => {
+
+    if (a.completed !== b.completed) {
+      return a.completed - b.completed;
+    }
+
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
 
   if (!tasks.length) {
     taskList.innerHTML = `
@@ -127,18 +157,30 @@ function renderTasks(search = "") {
     const priorityClass =
       task.priority.toLowerCase();
 
+    const overdue =
+      task.dueDate &&
+      !task.completed &&
+      new Date(task.dueDate) < new Date();
+
     taskList.innerHTML += `
-      <div class="task-card ${task.completed ? "done" : ""}"
-           draggable="true"
-           ondragstart="dragStart(${task.id})"
-           ondragover="dragOver(event)"
-           ondrop="dropTask(${task.id})">
+      <div class="
+        task-card
+        ${task.completed ? "done" : ""}
+        ${overdue ? "overdue" : ""}
+      "
+
+      draggable="true"
+      ondragstart="dragStart(${task.id})"
+      ondragover="dragOver(event)"
+      ondrop="dropTask(${task.id})">
 
         <div class="task-top">
 
-          <input type="checkbox"
-                 ${task.completed ? "checked" : ""}
-                 onchange="toggleTask(${task.id})">
+          <input
+            type="checkbox"
+            ${task.completed ? "checked" : ""}
+            onchange="toggleTask(${task.id})"
+          >
 
           <div class="task-content">
 
@@ -148,7 +190,17 @@ function renderTasks(search = "") {
               ${task.priority}
             </span>
 
-            <small>📅 ${task.dueDate || "No Date"}</small>
+            <small>
+              📅 ${task.dueDate || "No Date"}
+            </small>
+
+            ${
+              overdue
+              ? `<div class="overdue-text">
+                   Overdue ⚠️
+                 </div>`
+              : ""
+            }
 
           </div>
 
@@ -187,28 +239,41 @@ function renderTasks(search = "") {
 function toggleTask(id) {
 
   const task =
-    AppState.tasks.find(t => t.id === id);
+    AppState.tasks.find(task => task.id === id);
+
+  if (!task) return;
 
   task.completed = !task.completed;
 
   if (task.completed) {
-    AppState.productivityScore += 10;
+
+    task.progress = 100;
+
+    updateStreak();
+
+    showToast("Task Completed 🎉");
+
+  } else {
+
+    task.progress = 0;
+
+    showToast("Task Reopened 🔄");
   }
 
   saveAll();
+
   renderTasks();
   renderCalendar();
   updateStats();
-
-  showToast("Task Updated 🚀");
 }
 
 function deleteTask(id) {
 
   AppState.tasks =
-    AppState.tasks.filter(t => t.id !== id);
+    AppState.tasks.filter(task => task.id !== id);
 
   saveAll();
+
   renderTasks();
   renderCalendar();
   updateStats();
@@ -219,16 +284,19 @@ function deleteTask(id) {
 function editTask(id) {
 
   const task =
-    AppState.tasks.find(t => t.id === id);
+    AppState.tasks.find(task => task.id === id);
+
+  if (!task) return;
 
   const newTitle =
     prompt("Edit Task", task.title);
 
   if (!newTitle) return;
 
-  task.title = newTitle;
+  task.title = newTitle.trim();
 
   saveAll();
+
   renderTasks();
 
   showToast("Task Edited ✏️");
@@ -237,18 +305,56 @@ function editTask(id) {
 function increaseProgress(id) {
 
   const task =
-    AppState.tasks.find(t => t.id === id);
+    AppState.tasks.find(task => task.id === id);
+
+  if (!task) return;
 
   task.progress += 10;
 
-  if (task.progress > 100) {
+  if (task.progress >= 100) {
+
     task.progress = 100;
+    task.completed = true;
+
+    updateStreak();
+
+    showToast("Task Fully Completed 🎯");
+
+  } else {
+
+    showToast("Progress Updated 📈");
   }
 
   saveAll();
-  renderTasks();
 
-  showToast("Progress Updated 📈");
+  renderTasks();
+  updateStats();
+}
+
+/* =========================================
+   STREAK SYSTEM
+========================================= */
+function updateStreak() {
+
+  const today =
+    new Date().toDateString();
+
+  if (AppState.lastCompletedDate !== today) {
+
+    AppState.streak++;
+
+    AppState.lastCompletedDate = today;
+
+    localStorage.setItem(
+      "streak",
+      JSON.stringify(AppState.streak)
+    );
+
+    localStorage.setItem(
+      "lastCompletedDate",
+      JSON.stringify(today)
+    );
+  }
 }
 
 /* =========================================
@@ -265,17 +371,31 @@ function dragOver(e) {
 function dropTask(id) {
 
   const draggedIndex =
-    AppState.tasks.findIndex(t => t.id === draggedTask);
+    AppState.tasks.findIndex(
+      task => task.id === draggedTask
+    );
 
   const targetIndex =
-    AppState.tasks.findIndex(t => t.id === id);
+    AppState.tasks.findIndex(
+      task => task.id === id
+    );
+
+  if (
+    draggedIndex === -1 ||
+    targetIndex === -1
+  ) return;
 
   const draggedItem =
     AppState.tasks.splice(draggedIndex, 1)[0];
 
-  AppState.tasks.splice(targetIndex, 0, draggedItem);
+  AppState.tasks.splice(
+    targetIndex,
+    0,
+    draggedItem
+  );
 
   saveAll();
+
   renderTasks();
 
   showToast("Tasks Reordered 🔄");
@@ -307,17 +427,19 @@ function renderCalendar() {
     new Date(year, month, 1).getDay();
 
   const monthNames = [
-    "January","February","March","April",
-    "May","June","July","August",
-    "September","October","November","December"
+    "January", "February", "March",
+    "April", "May", "June",
+    "July", "August", "September",
+    "October", "November", "December"
   ];
 
   monthYear.innerText =
     `${monthNames[month]} ${year}`;
 
   for (let i = 0; i < firstDay; i++) {
-    calendarView.innerHTML +=
-      `<div class="empty-box"></div>`;
+    calendarView.innerHTML += `
+      <div class="empty-box"></div>
+    `;
   }
 
   for (let d = 1; d <= days; d++) {
@@ -327,7 +449,8 @@ function renderCalendar() {
 
         if (!task.dueDate) return false;
 
-        const taskDate = new Date(task.dueDate);
+        const taskDate =
+          new Date(task.dueDate);
 
         return (
           taskDate.getDate() === d &&
@@ -342,7 +465,10 @@ function renderCalendar() {
         <div class="day-number">${d}</div>
 
         ${tasks.map(task => `
-          <div class="calendar-task ${task.priority.toLowerCase()}">
+          <div class="
+            calendar-task
+            ${task.priority.toLowerCase()}
+          ">
             ${task.title}
           </div>
         `).join("")}
@@ -356,12 +482,20 @@ function renderCalendar() {
    MONTH NAVIGATION
 ========================================= */
 prevMonth?.addEventListener("click", () => {
-  currentDate.setMonth(currentDate.getMonth() - 1);
+
+  currentDate.setMonth(
+    currentDate.getMonth() - 1
+  );
+
   renderCalendar();
 });
 
 nextMonth?.addEventListener("click", () => {
-  currentDate.setMonth(currentDate.getMonth() + 1);
+
+  currentDate.setMonth(
+    currentDate.getMonth() + 1
+  );
+
   renderCalendar();
 });
 
@@ -370,18 +504,28 @@ nextMonth?.addEventListener("click", () => {
 ========================================= */
 function updateStats() {
 
-  const total = AppState.tasks.length;
+  if (!statsContainer) return;
+
+  const total =
+    AppState.tasks.length;
 
   const completed =
-    AppState.tasks.filter(t => t.completed).length;
+    AppState.tasks.filter(
+      task => task.completed
+    ).length;
 
-  const pending = total - completed;
+  const pending =
+    total - completed;
 
   const productivity =
-    total === 0 ? 0 :
-    Math.round((completed / total) * 100);
+    total === 0
+      ? 0
+      : Math.round(
+          (completed / total) * 100
+        );
 
-  AppState.productivityScore = productivity;
+  AppState.productivityScore =
+    productivity;
 
   statsContainer.innerHTML = `
     <div class="stat-card">
@@ -403,6 +547,11 @@ function updateStats() {
       <h2>${productivity}%</h2>
       <p>Productivity</p>
     </div>
+
+    <div class="stat-card">
+      <h2>${AppState.streak}</h2>
+      <p>Daily Streak 🔥</p>
+    </div>
   `;
 }
 
@@ -411,13 +560,20 @@ function updateStats() {
 ========================================= */
 darkModeBtn?.addEventListener("click", () => {
 
-  AppState.darkMode = !AppState.darkMode;
+  AppState.darkMode =
+    !AppState.darkMode;
 
   body.classList.toggle("dark");
 
   localStorage.setItem(
     "darkMode",
     JSON.stringify(AppState.darkMode)
+  );
+
+  showToast(
+    AppState.darkMode
+      ? "Dark Mode Enabled 🌙"
+      : "Light Mode Enabled ☀️"
   );
 });
 
@@ -449,7 +605,7 @@ function startPomodoro() {
       pomodoroTime % 60;
 
     console.log(
-      `${minutes}:${seconds}`
+      `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`
     );
 
     if (pomodoroTime <= 0) {
@@ -458,10 +614,25 @@ function startPomodoro() {
 
       showToast("Pomodoro Complete 🍅");
 
+      playCompletionSound();
+
       pomodoroTime = 25 * 60;
     }
 
   }, 1000);
+}
+
+/* =========================================
+   COMPLETION SOUND
+========================================= */
+function playCompletionSound() {
+
+  const audio =
+    new Audio(
+      "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+    );
+
+  audio.play();
 }
 
 /* =========================================
@@ -471,28 +642,34 @@ function notifyIfNeeded(task) {
 
   if (!("Notification" in window)) return;
 
+  if (Notification.permission === "granted") {
+
+    new Notification("Task Created", {
+      body: task.title
+    });
+
+    return;
+  }
+
   Notification.requestPermission()
     .then(permission => {
 
       if (permission === "granted") {
 
-        new Notification(
-          "Task Created",
-          {
-            body: task.title
-          }
-        );
+        new Notification("Task Created", {
+          body: task.title
+        });
       }
     });
 }
 
 /* =========================================
-   EXPORT / IMPORT
+   EXPORT TASKS
 ========================================= */
 function exportTasks() {
 
   const data =
-    JSON.stringify(AppState.tasks);
+    JSON.stringify(AppState.tasks, null, 2);
 
   const blob =
     new Blob([data], {
@@ -507,37 +684,59 @@ function exportTasks() {
 
   a.href = url;
   a.download = "tasks.json";
+
   a.click();
+
+  URL.revokeObjectURL(url);
 
   showToast("Tasks Exported 📦");
 }
 
+/* =========================================
+   IMPORT TASKS
+========================================= */
 function importTasks(event) {
 
-  const file = event.target.files[0];
+  const file =
+    event.target.files[0];
 
   if (!file) return;
 
-  const reader = new FileReader();
+  const reader =
+    new FileReader();
 
   reader.onload = e => {
 
-    AppState.tasks =
-      JSON.parse(e.target.result);
+    try {
 
-    saveAll();
-    renderTasks();
-    renderCalendar();
-    updateStats();
+      const imported =
+        JSON.parse(e.target.result);
 
-    showToast("Tasks Imported ✅");
+      if (!Array.isArray(imported)) {
+        throw new Error();
+      }
+
+      AppState.tasks = imported;
+
+      saveAll();
+
+      renderTasks();
+      renderCalendar();
+      updateStats();
+
+      showToast("Tasks Imported ✅");
+
+    } catch (error) {
+
+      showToast("Invalid File ❌");
+    }
   };
 
   reader.readAsText(file);
 }
 
 /* =========================================
-   LOCAL STORAGE
+   LOCAL STORAGE SAVE
 ========================================= */
 function saveAll() {
 
@@ -566,6 +765,7 @@ function showToast(message) {
     document.createElement("div");
 
   toast.className = "toast";
+
   toast.innerText = message;
 
   document.body.appendChild(toast);
@@ -591,25 +791,43 @@ function showToast(message) {
 document.addEventListener("keydown", e => {
 
   if (e.key === "/") {
+
     e.preventDefault();
-    searchInput.focus();
+
+    searchInput?.focus();
   }
 
   if (e.ctrlKey && e.key === "n") {
+
     e.preventDefault();
-    taskInput.focus();
+
+    taskInput?.focus();
+  }
+
+  if (e.ctrlKey && e.key === "s") {
+
+    e.preventDefault();
+
+    saveAll();
+
+    showToast("Tasks Saved 💾");
   }
 });
 
 /* =========================================
    INIT
 ========================================= */
-loadDarkMode();
+function initApp() {
 
-renderTasks();
-renderCalendar();
-updateStats();
+  loadDarkMode();
 
-console.log(
-  "🚀 Productivity Dashboard PRO Loaded"
-);
+  renderTasks();
+  renderCalendar();
+  updateStats();
+
+  console.log(
+    "🚀 Productivity Dashboard ULTRA PRO Loaded"
+  );
+}
+
+initApp();
