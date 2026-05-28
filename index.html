@@ -2,197 +2,551 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SmartLife Dashboard</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
+
 <div class="container">
-  
-  <!-- Sidebar -->
+
+  <!-- ================= SIDEBAR ================= -->
   <aside class="sidebar">
-    <h2 class="logo">SmartLife</h2>
-    <ul>
-      <li class="active" data-page="dashboard">Dashboard</li>
-      <li data-page="tasks">Tasks</li>
-      <li data-page="finance">Finance</li>
-      <li data-page="focus">Focus</li>
+
+    <div class="sidebar-top">
+      <div class="logo-box">
+        <i class="fa-solid fa-layer-group"></i>
+        <h2 class="logo">SmartLife</h2>
+      </div>
+
+      <button id="menuToggle" class="menu-toggle">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <ul class="nav-links">
+      <li class="active" data-page="dashboard">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Dashboard</span>
+      </li>
+
+      <li data-page="tasks">
+        <i class="fa-solid fa-list-check"></i>
+        <span>Tasks</span>
+      </li>
+
+      <li data-page="finance">
+        <i class="fa-solid fa-wallet"></i>
+        <span>Finance</span>
+      </li>
+
+      <li data-page="focus">
+        <i class="fa-solid fa-brain"></i>
+        <span>Focus</span>
+      </li>
+
+      <li data-page="analytics">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Analytics</span>
+      </li>
+
+      <li data-page="settings">
+        <i class="fa-solid fa-gear"></i>
+        <span>Settings</span>
+      </li>
     </ul>
-    <div class="collapse">Collapse Menu</div>
+
+    <div class="sidebar-bottom">
+      <button class="collapse-btn">
+        <i class="fa-solid fa-angle-left"></i>
+        Collapse Menu
+      </button>
+    </div>
+
   </aside>
-  <!-- Main -->
+
+  <!-- ================= MAIN ================= -->
   <main class="main">
-    <!-- Topbar -->
+
+    <!-- ================= TOPBAR ================= -->
     <div class="topbar">
-      <input type="text" placeholder="Search tasks, finances, or settings..." />
+
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="text"
+          placeholder="Search tasks, finances, or settings..."
+        />
+      </div>
+
       <div class="right-section">
+
+        <button class="theme-btn">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
         <div class="notification">
-          🔔
+          <i class="fa-solid fa-bell"></i>
           <span class="dot"></span>
         </div>
+
         <div class="profile-box">
           <div class="profile-text">
             <h4>John Doe</h4>
             <p>PREMIUM USER</p>
           </div>
-          <div class="avatar"></div>
+
+          <div class="avatar">
+            <img
+              src="https://i.pravatar.cc/100"
+              alt="profile"
+            />
+          </div>
         </div>
+
       </div>
+
     </div>
-    <!-- Header -->
+
+    <!-- ================= HEADER ================= -->
     <div class="header">
+
       <div>
         <h1>Daily Overview</h1>
-        <p class="date">Wednesday, March 18, 2026</p>
+        <p class="date">Thursday, May 28, 2026</p>
       </div>
-      <button class="btn">+ New Entry</button>
-      
+
+      <div class="header-buttons">
+        <button class="secondary-btn">
+          <i class="fa-solid fa-download"></i>
+          Export
+        </button>
+
+        <button class="btn" id="openModalBtn">
+          <i class="fa-solid fa-plus"></i>
+          New Entry
+        </button>
+      </div>
+
     </div>
-    <!-- Cards -->
+
+    <!-- ================= STATS CARDS ================= -->
     <div class="cards">
+
       <div class="card">
-        <span class="tag green">+12.5%</span>
+        <div class="card-top">
+          <span class="tag green">+12.5%</span>
+          <i class="fa-solid fa-check"></i>
+        </div>
+
         <p>TASKS DONE</p>
         <h2>24/30</h2>
+
+        <div class="progress-bar">
+          <div class="progress-fill progress-green"></div>
+        </div>
       </div>
+
       <div class="card">
-        <span class="tag yellow">On Track</span>
+        <div class="card-top">
+          <span class="tag yellow">On Track</span>
+          <i class="fa-solid fa-clock"></i>
+        </div>
+
         <p>FOCUS TIME</p>
         <h2>4.5 hrs</h2>
+
+        <div class="progress-bar">
+          <div class="progress-fill progress-yellow"></div>
+        </div>
       </div>
+
       <div class="card">
-        <span class="tag red">-$240.00</span>
+        <div class="card-top">
+          <span class="tag red">-$240.00</span>
+          <i class="fa-solid fa-wallet"></i>
+        </div>
+
         <p>DAILY SPENDING</p>
         <h2>$1,240.50</h2>
+
+        <div class="progress-bar">
+          <div class="progress-fill progress-red"></div>
+        </div>
       </div>
+
+      <div class="card">
+        <div class="card-top">
+          <span class="tag blue">+18%</span>
+          <i class="fa-solid fa-fire"></i>
+        </div>
+
+        <p>STREAK</p>
+        <h2>14 Days</h2>
+
+        <div class="progress-bar">
+          <div class="progress-fill progress-blue"></div>
+        </div>
+      </div>
+
     </div>
-    <!-- Bottom -->
+
+    <!-- ================= MAIN CONTENT ================= -->
     <div class="bottom">
-      <!-- Tasks -->
-     <div class="tasks">
-   <div class="tasks-header">
-    <h3>Task Manager</h3>
-    <div class="calendar-header">
-  <button id="prevMonth">←</button>
-  <h4 id="monthYear"></h4>
-  <button id="nextMonth">→</button>
-    <button id="Month">←</button>
-      <button id="NextvMonth">←</button>
-  <button id="prevMonth">←</button>
-</div>
- <div class="view-toggle">
-  <button class="view-btn active" data-view="list">List</button>
-  <button class="view-btn" data-view="calendar">Calendar</button>
-</div>
-    </div>
-    <div id="todayTasks" class="today-tasks"></div>
-    <div id="taskList"></div>
-<div id="calendarView" class="calendar hidden"></div>
-    <!-- ADD TASK INPUT -->
-    <div class="add-task">
-  <input type="text" id="taskInput" placeholder="Add a new task..." />
-  <!-- NEW: PRIORITY -->
-  <select id="taskPriority">
-    <option value="High">High</option>
-    <option value="Medium" selected>Medium</option>
-    <option value="Low">Low</option>
-  </select>
-  <!-- NEW: DATE -->
-  <input type="date" id="taskDate" />
-  <button id="addBtn">Add</button>
-  
-</div>
-  <!-- TASK LIST -->
-</div>
-<!-- Finance Section -->
-<div class="finance-section">
-  <h3 class="finance-title">Finance Tracker</h3>
-  <div class="finance-container">
-    <!-- LEFT SIDE -->
-    <div class="finance-card">
-      <span>TOTAL BALANCE</span>
-      <h2>$12,450.80</h2>
-      <div class="finance-stats">
-        <div class="stat-box">
-          <p>INCOME</p>
-          <h4>+$4,200.00</h4>
+
+      <!-- ================= TASK SECTION ================= -->
+      <section class="tasks">
+
+        <div class="tasks-header">
+
+          <div>
+            <h3>Task Manager</h3>
+            <p>Manage your daily workflow efficiently</p>
+          </div>
+
+          <div class="tasks-controls">
+
+            <div class="calendar-header">
+              <button id="prevMonth">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+
+              <h4 id="monthYear">May 2026</h4>
+
+              <button id="nextMonth">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+
+            <div class="view-toggle">
+              <button class="view-btn active" data-view="list">
+                List
+              </button>
+
+              <button class="view-btn" data-view="calendar">
+                Calendar
+              </button>
+            </div>
+
+          </div>
+
         </div>
-        <div class="stat-box">
-          <p>EXPENSES</p>
-          <h4>-$1,850.00</h4>
+
+        <!-- TODAY TASKS -->
+        <div class="today-tasks">
+
+          <div class="today-task-card high">
+            <div class="task-left">
+              <input type="checkbox" />
+              <div>
+                <h4>Finish Dashboard UI</h4>
+                <p>High Priority • Due Today</p>
+              </div>
+            </div>
+
+            <span class="priority-badge high-badge">
+              High
+            </span>
+          </div>
+
+          <div class="today-task-card medium">
+            <div class="task-left">
+              <input type="checkbox" checked />
+              <div>
+                <h4>Prepare Presentation</h4>
+                <p>Medium Priority • Tomorrow</p>
+              </div>
+            </div>
+
+            <span class="priority-badge medium-badge">
+              Medium
+            </span>
+          </div>
+
         </div>
+
+        <!-- TASK LIST -->
+        <div id="taskList" class="task-list"></div>
+
+        <!-- CALENDAR -->
+        <div id="calendarView" class="calendar hidden"></div>
+
+        <!-- ADD TASK -->
+        <div class="add-task">
+
+          <input
+            type="text"
+            id="taskInput"
+            placeholder="Add a new task..."
+          />
+
+          <select id="taskPriority">
+            <option value="High">High</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Low">Low</option>
+          </select>
+
+          <input type="date" id="taskDate" />
+
+          <button id="addBtn">
+            <i class="fa-solid fa-plus"></i>
+            Add
+          </button>
+
+        </div>
+
+      </section>
+
+      <!-- ================= RIGHT SIDE ================= -->
+      <div class="right-column">
+
+        <!-- ================= FINANCE ================= -->
+        <section class="finance-section">
+
+          <div class="finance-top">
+            <h3 class="finance-title">
+              Finance Tracker
+            </h3>
+
+            <button class="small-btn">
+              View Report
+            </button>
+          </div>
+
+          <div class="finance-container">
+
+            <!-- LEFT -->
+            <div class="finance-card">
+
+              <span>TOTAL BALANCE</span>
+
+              <h2>$12,450.80</h2>
+
+              <div class="finance-stats">
+
+                <div class="stat-box">
+                  <p>INCOME</p>
+                  <h4>+$4,200.00</h4>
+                </div>
+
+                <div class="stat-box">
+                  <p>EXPENSES</p>
+                  <h4>-$1,850.00</h4>
+                </div>
+
+              </div>
+
+              <div class="finance-chart">
+                <div class="bar bar1"></div>
+                <div class="bar bar2"></div>
+                <div class="bar bar3"></div>
+                <div class="bar bar4"></div>
+                <div class="bar bar5"></div>
+              </div>
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="finance-form">
+
+              <h4>Quick Transfer</h4>
+
+              <input
+                type="text"
+                placeholder="Recipient"
+              />
+
+              <input
+                type="number"
+                placeholder="Amount"
+              />
+
+              <textarea
+                placeholder="Add note..."
+              ></textarea>
+
+              <button>
+                <i class="fa-solid fa-paper-plane"></i>
+                Send Money
+              </button>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ================= PRODUCTIVITY ================= -->
+        <section class="score">
+
+          <div class="score-top">
+            <h3>Productivity Score</h3>
+            <i class="fa-solid fa-trophy"></i>
+          </div>
+
+          <div class="circle">
+            <span>82%</span>
+            <p>Excellent</p>
+          </div>
+
+          <div class="score-stats">
+
+            <div class="score-item">
+              <h4>8h</h4>
+              <p>Focus</p>
+            </div>
+
+            <div class="score-item">
+              <h4>24</h4>
+              <p>Tasks</p>
+            </div>
+
+            <div class="score-item">
+              <h4>92%</h4>
+              <p>Goal</p>
+            </div>
+
+          </div>
+
+        </section>
+
       </div>
+
     </div>
-    <!-- RIGHT SIDE -->
-    <div class="finance-form">
-      <h4>Quick Transfer</h4>
-      <input type="text" placeholder="Recipient" />
-      <input type="number" placeholder="Amount" />
-      <button>Send Money</button>
-    </div>
-  </div>
-</div>
-      <!-- Score -->
-      <div class="score">
-        <h3>Productivity Score</h3>
-        <div class="circle">
-          <span>82%</span>
-          <p>Excellent</p>
-        </div>
-      </div>
-    </div>
+
   </main>
+
 </div>
-<!-- Overlay Modal -->
+
+<!-- ================= MODAL ================= -->
 <div id="overlay" class="overlay hidden">
+
   <div class="entry-card">
-    <!-- Header -->
+
+    <!-- HEADER -->
     <div class="entry-header">
+
       <div>
         <h2>Create New Entry</h2>
         <p>What would you like to add today?</p>
       </div>
-      <span id="closeBtn" class="close">&times;</span>
+
+      <span id="closeBtn" class="close">
+        &times;
+      </span>
+
     </div>
-    <!-- Tabs -->
+
+    <!-- TABS -->
     <div class="entry-tabs">
-      <button class="tab active" data-type="task">TASK</button>
-      <button class="tab" data-type="finance">FINANCE</button>
-      <button class="tab" data-type="focus">FOCUS</button>
+
+      <button class="tab active" data-type="task">
+        TASK
+      </button>
+
+      <button class="tab" data-type="finance">
+        FINANCE
+      </button>
+
+      <button class="tab" data-type="focus">
+        FOCUS
+      </button>
+
     </div>
-    <!-- Sections -->
+
+    <!-- BODY -->
     <div class="entry-body">
+
       <!-- TASK -->
       <div id="task" class="section active">
+
         <label>TASK TITLE</label>
-        <input type="text" placeholder="What needs to be done?" />
+
+        <input
+          type="text"
+          placeholder="What needs to be done?"
+        />
+
         <label>PRIORITY</label>
-       <div class="priority">
-  <button class="high">High</button>
-  <button class="medium active">Medium</button>
-  <button class="low">Low</button>
-</div>
-  <label>DUE DATE</label>
-  <input type="date" id="dueDate">
+
+        <div class="priority">
+
+          <button class="high">
+            High
+          </button>
+
+          <button class="medium active">
+            Medium
+          </button>
+
+          <button class="low">
+            Low
+          </button>
+
+        </div>
+
+        <label>DUE DATE</label>
+
+        <input type="date" id="dueDate">
+
       </div>
+
       <!-- FINANCE -->
       <div id="finance" class="section">
+
         <label>AMOUNT</label>
-        <input type="number" placeholder="Enter amount" />
+
+        <input
+          type="number"
+          placeholder="Enter amount"
+        />
+
         <label>CATEGORY</label>
-        <input type="text" placeholder="Food, Rent..." />
+
+        <input
+          type="text"
+          placeholder="Food, Rent..."
+        />
+
       </div>
+
       <!-- FOCUS -->
       <div id="focus" class="section">
+
         <label>FOCUS TIME</label>
+
         <input type="time" />
+
         <label>MODE</label>
-        <input type="text" placeholder="Deep work / Study" />
+
+        <input
+          type="text"
+          placeholder="Deep work / Study"
+        />
+
       </div>
+
     </div>
-    <!-- Button -->
-    <button class="save-btn">SAVE ENTRY</button>
+
+    <!-- BUTTON -->
+    <button class="save-btn">
+      SAVE ENTRY
+    </button>
+
   </div>
+
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>
