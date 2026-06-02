@@ -1,9 +1,17 @@
 "use strict";
-const AppState = {
+const AppState =
+JSON.parse(localStorage.getItem("SmartLifeData")) || {
   tasks: [],
   finance: [],
   focus: []
 };
+
+function saveToLocalStorage() {
+  localStorage.setItem(
+    "SmartLifeData",
+    JSON.stringify(AppState)
+  );
+}
 
 const newEntryBtn = document.querySelector(".btn");
 const overlay = document.getElementById("overlay");
@@ -348,11 +356,5 @@ rendercalender(currentday);
 
 
 //logic  Tasks on the calender that i add in the tasks dashboard
-function TasksToCalender(){
-  const tasktitle= document.getElementById("task").input;
-  const tasktocalenderdiv=document.createElement("div");
-  classList.add(tasktocalenderdiv);
-  calenderblock.
-}
 
 initApp();
