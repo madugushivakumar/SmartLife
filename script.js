@@ -1,17 +1,9 @@
 "use strict";
-const AppState =
-JSON.parse(localStorage.getItem("SmartLifeData")) || {
+const AppState = {
   tasks: [],
   finance: [],
   focus: []
 };
-
-function saveToLocalStorage() {
-  localStorage.setItem(
-    "SmartLifeData",
-    JSON.stringify(AppState)
-  );
-}
 
 const newEntryBtn = document.querySelector(".btn");
 const overlay = document.getElementById("overlay");
