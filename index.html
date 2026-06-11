@@ -106,28 +106,42 @@
 
           <div id="taskList"></div>
           <!--calendersection-->       
+<!-- Calendar Section -->
 <div class="calendersection">
-  <h1>Calender</h1>
+  <h1>Calendar</h1>
+
   <div class="calender-header">
-  <button id="prevMonth"><-</button>
-  <h2 id="monthYear"></h2>
-  <button id="NextMonth">-></button>
+    <button id="prevMonth">&lt;-</button>
+    <h2 id="monthYear"></h2>
+    <button id="NextMonth">-&gt;</button>
   </div>
 
   <div class="weekdays">
-     <div>Sunday</div>
+    <div>Sunday</div>
     <div>Monday</div>
     <div>Tuesday</div>
-    <div>Wednsday</div>
+    <div>Wednesday</div>
     <div>Thursday</div>
     <div>Friday</div>
     <div>Saturday</div>
-    
-    
   </div>
 
-<div class="calenderblock">
-</div>
+  <div class="calenderblock"></div>
+
+  <!-- New Feature -->
+  <div class="noteSection">
+    <h3>Selected Date</h3>
+
+    <p id="selectedDate">No Date Selected</p>
+
+    <textarea
+      id="dayNote"
+      placeholder="Write notes for this day..."
+    ></textarea>
+
+    <button id="saveNoteBtn">Save Note</button>
+  </div>
+
 </div>
 </div>
 
