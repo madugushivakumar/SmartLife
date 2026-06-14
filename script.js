@@ -348,19 +348,5 @@ rendercalender(currentday);
 
 
 //logic  Tasks on the calender that i add in the tasks dashboard
-const themeBtn = document.getElementById("themeToggle");
-
-themeBtn.addEventListener("click", () => {
-
-    document.body.classList.toggle("dark");
-
-    if(document.body.classList.contains("dark")){
-        themeBtn.innerText = "☀️ Light Mode";
-    }
-    else{
-        themeBtn.innerText = "🌙 Dark Mode";
-    }
-
-});
 
 initApp();
