@@ -22,7 +22,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 0 20px rgba(0,0,0,0.08);
 }
 
 .logo {
@@ -47,11 +46,7 @@ body {
   background: #6c5ce7;
   color: white;
 }
-.sidebar li:hover {
-  background: #f1f3ff;
-  color: #6c5ce7;
-  transform: translateX(5px);
-}
+
 .collapse {
   font-size: 13px;
   color: gray;
